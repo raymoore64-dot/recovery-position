@@ -246,35 +246,35 @@ export default function RosterPage() {
   return (
     <div className="space-y-8">
       <div>
-        <p className="text-xs font-bold tracking-widest uppercase text-amber-deep mb-2">
+        <p className="text-xs font-bold tracking-widest uppercase text-amber-deep mb-3">
           Your Roster
         </p>
-        <h1 style={{ fontFamily: "var(--font-display-semibold)" }} className="text-2xl text-navy">
+        <h1 style={{ fontFamily: "var(--font-display)" }} className="text-3xl text-navy tracking-tight">
           Add shifts
         </h1>
       </div>
 
-      <div className="flex gap-2 border-b border-line">
+      <div className="flex gap-2">
         <button
           onClick={() => setMode("single")}
-          className={`px-4 py-2 text-sm font-semibold border-b-2 -mb-px transition-colors ${
-            mode === "single" ? "border-amber text-navy" : "border-transparent text-ink/50"
+          className={`px-4 py-2 text-sm font-bold rounded-full transition-colors ${
+            mode === "single" ? "bg-navy text-paper" : "bg-cream text-navy/60 hover:text-navy"
           }`}
         >
           Single shift
         </button>
         <button
           onClick={() => setMode("batch")}
-          className={`px-4 py-2 text-sm font-semibold border-b-2 -mb-px transition-colors ${
-            mode === "batch" ? "border-amber text-navy" : "border-transparent text-ink/50"
+          className={`px-4 py-2 text-sm font-bold rounded-full transition-colors ${
+            mode === "batch" ? "bg-navy text-paper" : "bg-cream text-navy/60 hover:text-navy"
           }`}
         >
           Batch pattern
         </button>
         <button
           onClick={() => setMode("scan")}
-          className={`px-4 py-2 text-sm font-semibold border-b-2 -mb-px transition-colors ${
-            mode === "scan" ? "border-amber text-navy" : "border-transparent text-ink/50"
+          className={`px-4 py-2 text-sm font-bold rounded-full transition-colors ${
+            mode === "scan" ? "bg-navy text-paper" : "bg-cream text-navy/60 hover:text-navy"
           }`}
         >
           Scan (AI)
@@ -282,7 +282,7 @@ export default function RosterPage() {
       </div>
 
       {mode === "single" && (
-        <form onSubmit={handleSubmit} className="bg-cream rounded-xl p-6 space-y-4">
+        <form onSubmit={handleSubmit} className="bg-cream rounded-2xl p-7 space-y-4 card-shadow">
           <div className="grid grid-cols-2 gap-4">
             <label className="block">
               <span className="text-xs font-semibold text-navy uppercase tracking-wide">Date</span>
@@ -336,7 +336,7 @@ export default function RosterPage() {
           <button
             type="submit"
             disabled={saving}
-            className="bg-amber text-navy-deep font-bold text-sm px-5 py-2.5 rounded-full hover:bg-amber-deep hover:text-paper transition-colors disabled:opacity-50"
+            className="btn-primary bg-amber text-navy-deep font-bold text-sm px-5 py-2.5 rounded-full hover:bg-amber-deep hover:text-paper transition-colors disabled:opacity-50"
           >
             {saving ? "Saving…" : "Save shift"}
           </button>
@@ -344,7 +344,7 @@ export default function RosterPage() {
       )}
 
       {mode === "batch" && (
-        <div className="bg-cream rounded-xl p-6 space-y-5">
+        <div className="bg-cream rounded-2xl p-7 space-y-5 card-shadow">
           <p className="text-sm text-ink/70">
             Build one cycle of your rota by clicking the shift types in order, then repeat it
             forward from a start date. E.g. click{" "}
@@ -464,7 +464,7 @@ export default function RosterPage() {
               type="button"
               onClick={handleBatchSave}
               disabled={preview.length === 0 || batchSaving}
-              className="bg-amber text-navy-deep font-bold text-sm px-5 py-2.5 rounded-full hover:bg-amber-deep hover:text-paper transition-colors disabled:opacity-50"
+              className="btn-primary bg-amber text-navy-deep font-bold text-sm px-5 py-2.5 rounded-full hover:bg-amber-deep hover:text-paper transition-colors disabled:opacity-50"
             >
               {batchSaving ? "Saving…" : `Save ${preview.length} shifts`}
             </button>
@@ -478,7 +478,7 @@ export default function RosterPage() {
       )}
 
       {mode === "scan" && (
-        <div className="bg-cream rounded-xl p-6 space-y-5">
+        <div className="bg-cream rounded-2xl p-7 space-y-5 card-shadow">
           <p className="text-sm text-ink/70">
             Upload a photo of your printed or screenshotted rota. It'll read the shifts and give
             you an editable preview before anything is saved — nothing goes into your roster
@@ -507,7 +507,7 @@ export default function RosterPage() {
             type="button"
             onClick={handleScan}
             disabled={!scanFile || scanning}
-            className="bg-amber text-navy-deep font-bold text-sm px-5 py-2.5 rounded-full hover:bg-amber-deep hover:text-paper transition-colors disabled:opacity-50"
+            className="btn-primary bg-amber text-navy-deep font-bold text-sm px-5 py-2.5 rounded-full hover:bg-amber-deep hover:text-paper transition-colors disabled:opacity-50"
           >
             {scanning ? "Reading roster…" : "Scan roster"}
           </button>
@@ -573,7 +573,7 @@ export default function RosterPage() {
                   type="button"
                   onClick={handleScanSave}
                   disabled={scanSaving}
-                  className="bg-amber text-navy-deep font-bold text-sm px-5 py-2.5 rounded-full hover:bg-amber-deep hover:text-paper transition-colors disabled:opacity-50"
+                  className="btn-primary bg-amber text-navy-deep font-bold text-sm px-5 py-2.5 rounded-full hover:bg-amber-deep hover:text-paper transition-colors disabled:opacity-50"
                 >
                   {scanSaving ? "Saving…" : `Save ${scannedShifts.length} shifts`}
                 </button>
@@ -585,7 +585,7 @@ export default function RosterPage() {
       )}
 
       <div>
-        <h2 style={{ fontFamily: "var(--font-display-semibold)" }} className="text-lg text-navy mb-3">
+        <h2 style={{ fontFamily: "var(--font-display)" }} className="text-2xl text-navy mb-4 tracking-tight">
           Upcoming &amp; recent
         </h2>
         {loading ? (
@@ -597,7 +597,7 @@ export default function RosterPage() {
             {shifts.map((s) => (
               <div
                 key={s.id}
-                className="flex items-center justify-between bg-cream rounded-lg px-4 py-3 text-sm"
+                className="flex items-center justify-between bg-cream rounded-xl px-4 py-3.5 text-sm card-shadow"
               >
                 <div className="font-semibold text-navy w-32">{s.date}</div>
                 <div className="flex-1 text-ink/80 capitalize">

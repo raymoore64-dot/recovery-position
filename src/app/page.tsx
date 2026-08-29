@@ -1,6 +1,7 @@
 import db, { Shift } from "@/lib/db";
 import { buildPlan, shiftLabel, DayPlan } from "@/lib/schedule";
 import Link from "next/link";
+import Image from "next/image";
 
 // This page reads live data (today's date, current shifts) on every
 // request, so it must never be statically prerendered at build time.
@@ -54,17 +55,17 @@ export default function Home() {
   });
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-12">
       <section>
-        <p className="text-xs font-bold tracking-widest uppercase text-amber-deep mb-2">
+        <p className="text-xs font-bold tracking-widest uppercase text-amber-deep mb-3">
           Today &middot; {weekday}
         </p>
 
         {!todayPlan.shift ? (
-          <div className="bg-cream rounded-xl p-6">
+          <div className="bg-cream rounded-2xl p-8 card-shadow">
             <p
-              style={{ fontFamily: "var(--font-display-semibold)" }}
-              className="text-xl text-navy mb-2"
+              style={{ fontFamily: "var(--font-display)" }}
+              className="text-2xl text-navy mb-2 tracking-tight"
             >
               No shift logged for today.
             </p>
@@ -77,47 +78,65 @@ export default function Home() {
             </p>
           </div>
         ) : (
-          <div className="bg-navy text-paper rounded-xl p-6">
-            <h1
-              style={{ fontFamily: "var(--font-display-semibold)" }}
-              className="text-2xl mb-4"
-            >
-              {shiftLabel(todayPlan.shift.shift_type)}
-              {todayPlan.shift.start_time && todayPlan.shift.end_time
-                ? ` — ${todayPlan.shift.start_time}–${todayPlan.shift.end_time}`
-                : ""}
-            </h1>
-
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              <div className="border-t border-paper/15 pt-3">
-                <div className="text-paper/60 text-xs uppercase tracking-wide mb-1">
-                  Sleep window
-                </div>
-                <div className="font-semibold">
-                  {todayPlan.sleepWindow
-                    ? `${todayPlan.sleepWindow.start} – ${todayPlan.sleepWindow.end}`
-                    : "—"}
-                </div>
-              </div>
-              <div className="border-t border-paper/15 pt-3">
-                <div className="text-paper/60 text-xs uppercase tracking-wide mb-1">
-                  Caffeine cutoff
-                </div>
-                <div className="font-semibold">{todayPlan.caffeineCutoff ?? "—"}</div>
-              </div>
-            </div>
-
-            <div className="mt-4">
-              <span
-                className={`inline-block text-xs font-bold px-3 py-1 rounded-full ${energyColor[todayPlan.energy]}`}
+          <div className="relative overflow-hidden bg-navy text-paper rounded-2xl p-8 card-shadow">
+            <div className="moonbleed" />
+            <Image
+              src="/icon.svg"
+              alt=""
+              width={140}
+              height={140}
+              className="absolute -bottom-6 -right-6 opacity-[0.08] pointer-events-none"
+            />
+            <div className="relative z-10">
+              <h1
+                style={{ fontFamily: "var(--font-display)" }}
+                className="text-4xl tracking-tight mb-6"
               >
-                Energy: {todayPlan.energy}
-              </span>
-              {todayPlan.isBestDay && (
-                <span className="inline-block ml-2 text-xs font-bold px-3 py-1 rounded-full bg-amber text-navy-deep">
-                  Best day for family &amp; errands
+                {shiftLabel(todayPlan.shift.shift_type)}
+                {todayPlan.shift.start_time && todayPlan.shift.end_time
+                  ? ` — ${todayPlan.shift.start_time}–${todayPlan.shift.end_time}`
+                  : ""}
+              </h1>
+
+              <div className="grid grid-cols-2 gap-6 text-sm">
+                <div className="border-t border-paper/15 pt-3">
+                  <div className="text-paper/60 text-xs uppercase tracking-widest mb-1 font-semibold">
+                    Sleep window
+                  </div>
+                  <div
+                    style={{ fontFamily: "var(--font-display-semibold)" }}
+                    className="text-xl"
+                  >
+                    {todayPlan.sleepWindow
+                      ? `${todayPlan.sleepWindow.start} – ${todayPlan.sleepWindow.end}`
+                      : "—"}
+                  </div>
+                </div>
+                <div className="border-t border-paper/15 pt-3">
+                  <div className="text-paper/60 text-xs uppercase tracking-widest mb-1 font-semibold">
+                    Caffeine cutoff
+                  </div>
+                  <div
+                    style={{ fontFamily: "var(--font-display-semibold)" }}
+                    className="text-xl"
+                  >
+                    {todayPlan.caffeineCutoff ?? "—"}
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-6 flex flex-wrap gap-2">
+                <span
+                  className={`inline-block text-xs font-bold px-3 py-1.5 rounded-full ${energyColor[todayPlan.energy]}`}
+                >
+                  Energy: {todayPlan.energy}
                 </span>
-              )}
+                {todayPlan.isBestDay && (
+                  <span className="inline-block text-xs font-bold px-3 py-1.5 rounded-full bg-amber text-navy-deep">
+                    Best day for family &amp; errands
+                  </span>
+                )}
+              </div>
             </div>
           </div>
         )}
@@ -125,8 +144,8 @@ export default function Home() {
 
       <section>
         <h2
-          style={{ fontFamily: "var(--font-display-semibold)" }}
-          className="text-lg text-navy mb-3"
+          style={{ fontFamily: "var(--font-display)" }}
+          className="text-2xl text-navy mb-4 tracking-tight"
         >
           The next 7 days
         </h2>
@@ -137,19 +156,19 @@ export default function Home() {
             return (
               <div
                 key={p.date}
-                className="flex items-center justify-between bg-cream rounded-lg px-4 py-3 text-sm"
+                className="flex items-center justify-between bg-cream rounded-xl px-4 py-3.5 text-sm card-shadow"
               >
                 <div className="font-semibold text-navy w-28">{label}</div>
                 <div className="flex-1 text-ink/80">
                   {p.shift ? shiftLabel(p.shift.shift_type) : "—"}
                 </div>
                 <span
-                  className={`text-xs font-bold px-2 py-0.5 rounded-full ${energyColor[p.energy]}`}
+                  className={`text-xs font-bold px-2.5 py-1 rounded-full ${energyColor[p.energy]}`}
                 >
                   {p.energy}
                 </span>
                 {p.isBestDay && (
-                  <span className="ml-2 text-xs font-bold px-2 py-0.5 rounded-full bg-amber text-navy-deep">
+                  <span className="ml-2 text-xs font-bold px-2.5 py-1 rounded-full bg-amber text-navy-deep">
                     Best day
                   </span>
                 )}
