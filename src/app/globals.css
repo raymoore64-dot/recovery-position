@@ -1,0 +1,71 @@
+@import "tailwindcss";
+
+/* Brand fonts. Drop matching .ttf files into /public/fonts to activate
+   (see README) — Work Sans for body/UI, Fraunces for display headings. */
+@font-face {
+  font-family: "Work Sans";
+  src: url("/fonts/WorkSans-Regular.ttf");
+  font-weight: 400;
+}
+@font-face {
+  font-family: "Work Sans";
+  src: url("/fonts/WorkSans-Medium.ttf");
+  font-weight: 500;
+}
+@font-face {
+  font-family: "Work Sans";
+  src: url("/fonts/WorkSans-SemiBold.ttf");
+  font-weight: 600;
+}
+@font-face {
+  font-family: "Work Sans";
+  src: url("/fonts/WorkSans-Bold.ttf");
+  font-weight: 700;
+}
+@font-face {
+  font-family: "Fraunces Black";
+  src: url("/fonts/Fraunces-Black.ttf");
+}
+@font-face {
+  font-family: "Fraunces SemiBold";
+  src: url("/fonts/Fraunces-SemiBold.ttf");
+}
+@font-face {
+  font-family: "Fraunces Soft Italic";
+  src: url("/fonts/Fraunces-SoftItalic.ttf");
+  font-style: italic;
+}
+
+:root {
+  --background: #fbf8f2;
+  --foreground: #262420;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  /* The Recovery Position brand palette */
+  --color-navy: #1e2a47;
+  --color-navy-deep: #141c30;
+  --color-navy-mid: #24304f;
+  --color-amber: #f3a468;
+  --color-amber-deep: #d97f3d;
+  --color-sage: #7c9c88;
+  --color-cream: #f6f0e4;
+  --color-paper: #fbf8f2;
+  --color-ink: #262420;
+  --color-rose: #c4694a;
+  --color-line: #e3d9c6;
+
+  --font-sans: "Work Sans", sans-serif;
+  --font-display: "Fraunces Black", serif;
+  --font-display-semibold: "Fraunces SemiBold", serif;
+  --font-display-italic: "Fraunces Soft Italic", serif;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
