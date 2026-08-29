@@ -1,7 +1,9 @@
 import db, { Shift } from "@/lib/db";
 import { buildPlan, shiftLabel, DayPlan } from "@/lib/schedule";
+import { quipFor } from "@/lib/quips";
 import Link from "next/link";
 import Image from "next/image";
+import RecoveryDial from "@/components/RecoveryDial";
 
 // This page reads live data (today's date, current shifts) on every
 // request, so it must never be statically prerendered at build time.
@@ -38,6 +40,16 @@ function loadWeekPlan(): DayPlan[] {
   return allPlans.slice(1);
 }
 
+/** Total night shifts ever logged up to and including today — a small,
+ * honest, slightly self-congratulatory stat computed from real data. */
+function loadNightsSurvived(): number {
+  const today = isoDate(new Date());
+  const row = db
+    .prepare("SELECT COUNT(*) as c FROM shifts WHERE shift_type = 'night' AND date <= ?")
+    .get(today) as { c: number };
+  return row.c;
+}
+
 const energyColor: Record<DayPlan["energy"], string> = {
   High: "bg-sage text-navy-deep",
   Recovering: "bg-amber/30 text-navy",
@@ -48,6 +60,7 @@ const energyColor: Record<DayPlan["energy"], string> = {
 export default function Home() {
   const plans = loadWeekPlan();
   const todayPlan = plans[0];
+  const nightsSurvived = loadNightsSurvived();
   const weekday = new Date(todayPlan.date + "T00:00:00").toLocaleDateString("en-GB", {
     weekday: "long",
     day: "numeric",
@@ -87,58 +100,75 @@ export default function Home() {
               height={140}
               className="absolute -bottom-6 -right-6 opacity-[0.08] pointer-events-none"
             />
-            <div className="relative z-10">
-              <h1
-                style={{ fontFamily: "var(--font-display)" }}
-                className="text-4xl tracking-tight mb-6"
-              >
-                {shiftLabel(todayPlan.shift.shift_type)}
-                {todayPlan.shift.start_time && todayPlan.shift.end_time
-                  ? ` — ${todayPlan.shift.start_time}–${todayPlan.shift.end_time}`
-                  : ""}
-              </h1>
-
-              <div className="grid grid-cols-2 gap-6 text-sm">
-                <div className="border-t border-paper/15 pt-3">
-                  <div className="text-paper/60 text-xs uppercase tracking-widest mb-1 font-semibold">
-                    Sleep window
-                  </div>
-                  <div
-                    style={{ fontFamily: "var(--font-display-semibold)" }}
-                    className="text-xl"
-                  >
-                    {todayPlan.sleepWindow
-                      ? `${todayPlan.sleepWindow.start} – ${todayPlan.sleepWindow.end}`
-                      : "—"}
-                  </div>
-                </div>
-                <div className="border-t border-paper/15 pt-3">
-                  <div className="text-paper/60 text-xs uppercase tracking-widest mb-1 font-semibold">
-                    Caffeine cutoff
-                  </div>
-                  <div
-                    style={{ fontFamily: "var(--font-display-semibold)" }}
-                    className="text-xl"
-                  >
-                    {todayPlan.caffeineCutoff ?? "—"}
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-6 flex flex-wrap gap-2">
-                <span
-                  className={`inline-block text-xs font-bold px-3 py-1.5 rounded-full ${energyColor[todayPlan.energy]}`}
+            <div className="relative z-10 flex flex-wrap items-start justify-between gap-6">
+              <div className="flex-1 min-w-[240px]">
+                <h1
+                  style={{ fontFamily: "var(--font-display)" }}
+                  className="text-4xl tracking-tight mb-2"
                 >
-                  Energy: {todayPlan.energy}
-                </span>
-                {todayPlan.isBestDay && (
-                  <span className="inline-block text-xs font-bold px-3 py-1.5 rounded-full bg-amber text-navy-deep">
-                    Best day for family &amp; errands
+                  {shiftLabel(todayPlan.shift.shift_type)}
+                  {todayPlan.shift.start_time && todayPlan.shift.end_time
+                    ? ` — ${todayPlan.shift.start_time}–${todayPlan.shift.end_time}`
+                    : ""}
+                </h1>
+                <p
+                  style={{ fontFamily: "var(--font-display-italic)" }}
+                  className="text-amber text-sm mb-6"
+                >
+                  {quipFor(todayPlan)}
+                </p>
+
+                <div className="grid grid-cols-2 gap-6 text-sm">
+                  <div className="border-t border-paper/15 pt-3">
+                    <div className="text-paper/60 text-xs uppercase tracking-widest mb-1 font-semibold">
+                      Sleep window
+                    </div>
+                    <div
+                      style={{ fontFamily: "var(--font-display-semibold)" }}
+                      className="text-xl"
+                    >
+                      {todayPlan.sleepWindow
+                        ? `${todayPlan.sleepWindow.start} – ${todayPlan.sleepWindow.end}`
+                        : "—"}
+                    </div>
+                  </div>
+                  <div className="border-t border-paper/15 pt-3">
+                    <div className="text-paper/60 text-xs uppercase tracking-widest mb-1 font-semibold">
+                      Caffeine cutoff
+                    </div>
+                    <div
+                      style={{ fontFamily: "var(--font-display-semibold)" }}
+                      className="text-xl"
+                    >
+                      {todayPlan.caffeineCutoff ?? "—"}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-6 flex flex-wrap gap-2">
+                  <span
+                    className={`inline-block text-xs font-bold px-3 py-1.5 rounded-full ${energyColor[todayPlan.energy]}`}
+                  >
+                    Energy: {todayPlan.energy}
                   </span>
-                )}
+                  {todayPlan.isBestDay && (
+                    <span className="inline-block text-xs font-bold px-3 py-1.5 rounded-full bg-amber text-navy-deep">
+                      Best day for family &amp; errands
+                    </span>
+                  )}
+                </div>
               </div>
+
+              <RecoveryDial score={todayPlan.recoveryScore} label={todayPlan.recoveryLabel} />
             </div>
           </div>
+        )}
+
+        {nightsSurvived > 0 && (
+          <p className="text-xs text-ink/50 mt-3 text-center">
+            🌙 {nightsSurvived.toLocaleString()} night shift{nightsSurvived === 1 ? "" : "s"}{" "}
+            survived and counting.
+          </p>
         )}
       </section>
 

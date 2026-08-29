@@ -7,6 +7,8 @@ export interface DayPlan {
   caffeineCutoff: string | null;
   energy: "High" | "Recovering" | "Medium" | "Low";
   isBestDay: boolean;
+  recoveryScore: number; // 0-100, for the dial
+  recoveryLabel: string; // wry human-readable label for the same number
 }
 
 /** Minutes since midnight, for a "HH:MM" string. */
@@ -102,6 +104,7 @@ export function buildPlan(dates: string[], shiftsByDate: Map<string, Shift>): Da
     const sleepWindow = today ? sleepWindowFor(today) : null;
     const caffeineCutoff = caffeineCutoffFor(sleepWindow);
     const energy = energyFor(today, yesterday, consecutiveNights);
+    const { score: recoveryScore, label: recoveryLabel } = recoveryScoreFor(energy as DayPlan["energy"]);
 
     plans.push({
       date,
@@ -110,6 +113,8 @@ export function buildPlan(dates: string[], shiftsByDate: Map<string, Shift>): Da
       caffeineCutoff,
       energy: energy as DayPlan["energy"],
       isBestDay: false, // filled in below
+      recoveryScore,
+      recoveryLabel,
     });
   }
 
@@ -136,6 +141,24 @@ function markBestDays(plans: DayPlan[]) {
     if (!(prevWorking && nextWorking) && p.energy !== "Recovering") {
       p.isBestDay = true;
     }
+  }
+}
+
+/**
+ * Maps the energy category to a 0-100 score for the Recovery dial, plus a
+ * wry human-readable label. Deterministic on purpose — the same energy
+ * category always gives the same score, so the dial doesn't feel random.
+ */
+function recoveryScoreFor(energy: DayPlan["energy"]): { score: number; label: string } {
+  switch (energy) {
+    case "High":
+      return { score: 88, label: "Suspiciously human" };
+    case "Medium":
+      return { score: 62, label: "Holding it together" };
+    case "Recovering":
+      return { score: 38, label: "Recovering — don't push it" };
+    case "Low":
+      return { score: 18, label: "Running on fumes" };
   }
 }
 
