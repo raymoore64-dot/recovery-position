@@ -51,7 +51,7 @@ interface GeneratedShift {
 }
 
 export default function RosterPage() {
-  const [mode, setMode] = useState<"single" | "batch">("single");
+  const [mode, setMode] = useState<"single" | "batch" | "scan">("single");
   const [shifts, setShifts] = useState<Shift[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -68,6 +68,15 @@ export default function RosterPage() {
   const [repeatCount, setRepeatCount] = useState(4);
   const [batchSaving, setBatchSaving] = useState(false);
   const [batchSavedMsg, setBatchSavedMsg] = useState<string | null>(null);
+
+  // --- AI scan state ---
+  const [scanFile, setScanFile] = useState<File | null>(null);
+  const [scanPreviewUrl, setScanPreviewUrl] = useState<string | null>(null);
+  const [scanning, setScanning] = useState(false);
+  const [scanError, setScanError] = useState<string | null>(null);
+  const [scannedShifts, setScannedShifts] = useState<GeneratedShift[]>([]);
+  const [scanSaving, setScanSaving] = useState(false);
+  const [scanSavedMsg, setScanSavedMsg] = useState<string | null>(null);
 
   async function load() {
     setLoading(true);
@@ -160,6 +169,80 @@ export default function RosterPage() {
     await load();
   }
 
+  // --- scan helpers ---
+  function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0] ?? null;
+    setScanFile(file);
+    setScanError(null);
+    setScannedShifts([]);
+    setScanSavedMsg(null);
+    if (file) {
+      setScanPreviewUrl(URL.createObjectURL(file));
+    } else {
+      setScanPreviewUrl(null);
+    }
+  }
+
+  async function handleScan() {
+    if (!scanFile) return;
+    setScanning(true);
+    setScanError(null);
+    setScanSavedMsg(null);
+
+    const formData = new FormData();
+    formData.append("image", scanFile);
+    formData.append("referenceDate", todayISO());
+
+    try {
+      const res = await fetch("/api/roster/parse", { method: "POST", body: formData });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "Scan failed.");
+      }
+      setScannedShifts(data.shifts);
+    } catch (err) {
+      setScanError(err instanceof Error ? err.message : "Scan failed.");
+    } finally {
+      setScanning(false);
+    }
+  }
+
+  function updateScannedRow(index: number, patch: Partial<GeneratedShift>) {
+    setScannedShifts((rows) => {
+      const next = [...rows];
+      const row = { ...next[index], ...patch };
+      if (patch.shift_type && patch.shift_type !== "off" && !patch.start_time) {
+        row.start_time = SHIFT_PRESETS[patch.shift_type as Exclude<ShiftType, "off">].start;
+        row.end_time = SHIFT_PRESETS[patch.shift_type as Exclude<ShiftType, "off">].end;
+      }
+      if (patch.shift_type === "off") {
+        row.start_time = null;
+        row.end_time = null;
+      }
+      next[index] = row;
+      return next;
+    });
+  }
+
+  function removeScannedRow(index: number) {
+    setScannedShifts((rows) => rows.filter((_, i) => i !== index));
+  }
+
+  async function handleScanSave() {
+    if (scannedShifts.length === 0) return;
+    setScanSaving(true);
+    setScanSavedMsg(null);
+    const res = await fetch("/api/shifts/batch", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ shifts: scannedShifts }),
+    });
+    const data = await res.json();
+    setScanSaving(false);
+    setScanSavedMsg(`Saved ${data.count} shifts from the scan.`);
+    await load();
+  }
+
   return (
     <div className="space-y-8">
       <div>
@@ -188,9 +271,17 @@ export default function RosterPage() {
         >
           Batch pattern
         </button>
+        <button
+          onClick={() => setMode("scan")}
+          className={`px-4 py-2 text-sm font-semibold border-b-2 -mb-px transition-colors ${
+            mode === "scan" ? "border-amber text-navy" : "border-transparent text-ink/50"
+          }`}
+        >
+          Scan (AI)
+        </button>
       </div>
 
-      {mode === "single" ? (
+      {mode === "single" && (
         <form onSubmit={handleSubmit} className="bg-cream rounded-xl p-6 space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <label className="block">
@@ -250,7 +341,9 @@ export default function RosterPage() {
             {saving ? "Saving…" : "Save shift"}
           </button>
         </form>
-      ) : (
+      )}
+
+      {mode === "batch" && (
         <div className="bg-cream rounded-xl p-6 space-y-5">
           <p className="text-sm text-ink/70">
             Build one cycle of your rota by clicking the shift types in order, then repeat it
@@ -381,6 +474,113 @@ export default function RosterPage() {
             Saving will overwrite any existing shifts on the same dates — handy for correcting a
             rota, but worth knowing before you run it over dates you've already entered manually.
           </p>
+        </div>
+      )}
+
+      {mode === "scan" && (
+        <div className="bg-cream rounded-xl p-6 space-y-5">
+          <p className="text-sm text-ink/70">
+            Upload a photo of your printed or screenshotted rota. It'll read the shifts and give
+            you an editable preview before anything is saved — nothing goes into your roster
+            without you checking it first.
+          </p>
+
+          <div>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileSelect}
+              className="text-sm"
+            />
+          </div>
+
+          {scanPreviewUrl && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={scanPreviewUrl}
+              alt="Roster preview"
+              className="max-h-48 rounded-md border border-line"
+            />
+          )}
+
+          <button
+            type="button"
+            onClick={handleScan}
+            disabled={!scanFile || scanning}
+            className="bg-amber text-navy-deep font-bold text-sm px-5 py-2.5 rounded-full hover:bg-amber-deep hover:text-paper transition-colors disabled:opacity-50"
+          >
+            {scanning ? "Reading roster…" : "Scan roster"}
+          </button>
+
+          {scanError && (
+            <div className="text-sm text-rose bg-paper border border-rose/30 rounded-md p-3">
+              {scanError}
+            </div>
+          )}
+
+          {scannedShifts.length > 0 && (
+            <div>
+              <span className="text-xs font-semibold text-navy uppercase tracking-wide">
+                Review before saving ({scannedShifts.length} shifts)
+              </span>
+              <div className="mt-2 max-h-80 overflow-y-auto rounded-md border border-line bg-paper divide-y divide-line">
+                {scannedShifts.map((s, i) => (
+                  <div key={i} className="flex items-center gap-2 px-3 py-2 text-xs">
+                    <input
+                      type="date"
+                      value={s.date}
+                      onChange={(e) => updateScannedRow(i, { date: e.target.value })}
+                      className="rounded border border-line px-2 py-1 text-xs"
+                    />
+                    <select
+                      value={s.shift_type}
+                      onChange={(e) => updateScannedRow(i, { shift_type: e.target.value as ShiftType })}
+                      className="rounded border border-line px-2 py-1 text-xs"
+                    >
+                      <option value="day">Day</option>
+                      <option value="night">Night</option>
+                      <option value="long_day">Long Day</option>
+                      <option value="off">Off</option>
+                    </select>
+                    {s.shift_type !== "off" && (
+                      <>
+                        <input
+                          type="time"
+                          value={s.start_time ?? ""}
+                          onChange={(e) => updateScannedRow(i, { start_time: e.target.value })}
+                          className="rounded border border-line px-2 py-1 text-xs"
+                        />
+                        <input
+                          type="time"
+                          value={s.end_time ?? ""}
+                          onChange={(e) => updateScannedRow(i, { end_time: e.target.value })}
+                          className="rounded border border-line px-2 py-1 text-xs"
+                        />
+                      </>
+                    )}
+                    <button
+                      onClick={() => removeScannedRow(i)}
+                      className="ml-auto text-rose font-semibold hover:underline"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex items-center gap-3 mt-4">
+                <button
+                  type="button"
+                  onClick={handleScanSave}
+                  disabled={scanSaving}
+                  className="bg-amber text-navy-deep font-bold text-sm px-5 py-2.5 rounded-full hover:bg-amber-deep hover:text-paper transition-colors disabled:opacity-50"
+                >
+                  {scanSaving ? "Saving…" : `Save ${scannedShifts.length} shifts`}
+                </button>
+                {scanSavedMsg && <span className="text-sm text-sage font-semibold">{scanSavedMsg}</span>}
+              </div>
+            </div>
+          )}
         </div>
       )}
 

@@ -30,6 +30,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <Link href="/roster" className="hover:text-amber transition-colors">
                 Roster
               </Link>
+              <Link href="/leave" className="hover:text-amber transition-colors">
+                Leave
+              </Link>
+              <Link href="/library" className="hover:text-amber transition-colors">
+                Library
+              </Link>
             </nav>
           </div>
         </header>

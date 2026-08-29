@@ -1,0 +1,24 @@
+import { NextRequest, NextResponse } from "next/server";
+import { parseRosterImage } from "@/lib/parseRoster";
+
+export async function POST(req: NextRequest) {
+  const formData = await req.formData();
+  const file = formData.get("image") as File | null;
+  const referenceDate = (formData.get("referenceDate") as string) || new Date().toISOString().slice(0, 10);
+
+  if (!file) {
+    return NextResponse.json({ error: "No image uploaded." }, { status: 400 });
+  }
+
+  const bytes = await file.arrayBuffer();
+  const base64 = Buffer.from(bytes).toString("base64");
+  const mediaType = file.type || "image/jpeg";
+
+  try {
+    const shifts = await parseRosterImage(base64, mediaType, referenceDate);
+    return NextResponse.json({ shifts });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Unknown error parsing roster.";
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
+}

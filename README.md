@@ -95,3 +95,24 @@ day/night/long-day/off model. If your real rota has split shifts, on-call
 blocks, or unusual rotations, that's the function to extend — the `Shift`
 type in `db.ts` is deliberately minimal so it's easy to add fields
 (e.g. `on_call: boolean`) without restructuring anything else.
+
+## Leave Planner
+
+At `/leave`. Scans a date range for runs of consecutive off-days at least
+as long as you specify, and ranks them by how much of the run is genuine
+rest versus recovery from the shifts either side of it.
+
+## Rest & Recovery Library
+
+At `/library`. Static content — sleep techniques, relaxation methods
+gathered from a few different cultures, and simple fitness that doesn't
+need a gym.
+
+## Quiet AI roster scanning
+
+At `/roster`, third tab ("Scan (AI)"). Needs your own Anthropic API key:
+
+1. `cp .env.local.example .env.local`
+2. Get a key at https://console.anthropic.com/settings/keys
+3. Paste it into `.env.local`
+4. Restart the dev server
