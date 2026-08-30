@@ -27,6 +27,14 @@ db.exec(`
   );
 
   CREATE UNIQUE INDEX IF NOT EXISTS idx_shifts_date ON shifts(date);
+
+  CREATE TABLE IF NOT EXISTS tracks (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    filename TEXT NOT NULL,     -- expected at /public/audio/<filename>
+    category TEXT NOT NULL,     -- 'wind-down' | 'sleep' | 'relaxation' | 'energize'
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+  );
 `);
 
 export default db;
@@ -40,5 +48,15 @@ export interface Shift {
   start_time: string | null;
   end_time: string | null;
   notes: string | null;
+  created_at: string;
+}
+
+export type AudioCategory = "wind-down" | "sleep" | "relaxation" | "energize";
+
+export interface Track {
+  id: number;
+  title: string;
+  filename: string;
+  category: AudioCategory;
   created_at: string;
 }
