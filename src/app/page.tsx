@@ -83,7 +83,7 @@ export default function Home() {
         </p>
 
         {!todayPlan.shift ? (
-          <div className="bg-cream rounded-2xl p-8 card-shadow">
+          <div className="bg-cream rounded-2xl p-5 sm:p-8 card-shadow">
             <p
               style={{ fontFamily: "var(--font-display)" }}
               className="text-2xl text-ink mb-2 tracking-tight"
@@ -99,7 +99,7 @@ export default function Home() {
             </p>
           </div>
         ) : (
-          <div className="relative overflow-hidden bg-navy text-ink rounded-2xl p-8 card-shadow">
+          <div className="relative overflow-hidden bg-navy text-ink rounded-2xl p-5 sm:p-8 card-shadow">
             <div className="moonbleed" />
             <div className="moonbleed2" />
             <Image
@@ -109,11 +109,11 @@ export default function Home() {
               height={140}
               className="absolute -bottom-6 -right-6 opacity-[0.08] pointer-events-none"
             />
-            <div className="relative z-10 flex flex-wrap items-start justify-between gap-6">
+            <div className="relative z-10 flex flex-col sm:flex-row sm:items-start justify-between gap-5 sm:gap-6">
               <div className="flex-1 min-w-[240px]">
                 <h1
                   style={{ fontFamily: "var(--font-display)" }}
-                  className="text-4xl tracking-tight mb-2"
+                  className="text-[26px] leading-[1.15] sm:text-4xl tracking-tight mb-2"
                 >
                   {shiftLabel(todayPlan.shift.shift_type)}
                   {todayPlan.shift.start_time && todayPlan.shift.end_time
@@ -127,7 +127,7 @@ export default function Home() {
                   {quipFor(todayPlan)}
                 </p>
 
-                <div className="grid grid-cols-2 gap-6 text-sm">
+                <div className="grid grid-cols-2 gap-4 sm:gap-6 text-sm">
                   <div className="border-t border-paper/15 pt-3">
                     <div className="text-ink/60 text-xs uppercase tracking-widest mb-1 font-semibold">
                       Sleep window
@@ -168,7 +168,9 @@ export default function Home() {
                 </div>
               </div>
 
-              <RecoveryDial score={todayPlan.recoveryScore} label={todayPlan.recoveryLabel} />
+              <div className="self-center sm:self-auto">
+                <RecoveryDial score={todayPlan.recoveryScore} label={todayPlan.recoveryLabel} />
+              </div>
             </div>
           </div>
         )}
@@ -210,10 +212,10 @@ export default function Home() {
             return (
               <div
                 key={p.date}
-                className="flex items-center justify-between bg-cream rounded-xl px-4 py-3.5 text-sm card-shadow"
+                className="flex flex-wrap items-center gap-y-2 gap-x-3 bg-cream rounded-xl px-4 py-3.5 text-sm card-shadow"
               >
-                <div className="font-semibold text-ink w-28">{label}</div>
-                <div className="flex-1 text-ink/80">
+                <div className="font-semibold text-ink w-20 sm:w-28 shrink-0">{label}</div>
+                <div className="flex-1 min-w-[80px] text-ink/80">
                   {p.shift ? shiftLabel(p.shift.shift_type) : "—"}
                 </div>
                 <span
@@ -222,7 +224,7 @@ export default function Home() {
                   {p.energy}
                 </span>
                 {p.isBestDay && (
-                  <span className="ml-2 text-xs font-bold px-2.5 py-1 rounded-full bg-amber text-navy-deep">
+                  <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-amber text-navy-deep">
                     Best day
                   </span>
                 )}
