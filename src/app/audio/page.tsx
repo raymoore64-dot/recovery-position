@@ -75,7 +75,7 @@ export default function AudioPage() {
         <p className="text-xs font-bold tracking-widest uppercase text-amber-deep mb-2">
           Recovery Audio
         </p>
-        <h1 style={{ fontFamily: "var(--font-display)" }} className="text-3xl text-navy mb-2 tracking-tight">
+        <h1 style={{ fontFamily: "var(--font-display)" }} className="text-3xl text-ink mb-2 tracking-tight">
           Your own music, on shift-aware standby.
         </h1>
         <p className="text-sm text-ink/70 max-w-lg">
@@ -93,7 +93,7 @@ export default function AudioPage() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <label className="block">
-              <span className="text-xs font-semibold text-navy uppercase tracking-wide">Title</span>
+              <span className="text-xs font-semibold text-ink uppercase tracking-wide">Title</span>
               <input
                 type="text"
                 value={title}
@@ -104,7 +104,7 @@ export default function AudioPage() {
               />
             </label>
             <label className="block">
-              <span className="text-xs font-semibold text-navy uppercase tracking-wide">
+              <span className="text-xs font-semibold text-ink uppercase tracking-wide">
                 Filename in public/audio/
               </span>
               <input
@@ -118,7 +118,7 @@ export default function AudioPage() {
             </label>
           </div>
           <label className="block">
-            <span className="text-xs font-semibold text-navy uppercase tracking-wide">Category</span>
+            <span className="text-xs font-semibold text-ink uppercase tracking-wide">Category</span>
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value as AudioCategory)}
@@ -134,7 +134,7 @@ export default function AudioPage() {
           <button
             type="submit"
             disabled={saving}
-            className="btn-primary bg-amber text-navy-deep font-bold text-sm px-5 py-2.5 rounded-full hover:bg-amber-deep hover:text-paper transition-colors disabled:opacity-50"
+            className="btn-primary bg-amber text-navy-deep font-bold text-sm px-5 py-2.5 rounded-full hover:bg-amber-deep hover:text-ink transition-colors disabled:opacity-50"
           >
             {saving ? "Adding…" : "Add track"}
           </button>
@@ -152,7 +152,7 @@ export default function AudioPage() {
               <section key={cat}>
                 <h2
                   style={{ fontFamily: "var(--font-display-semibold)" }}
-                  className="text-lg text-navy mb-1"
+                  className="text-lg text-ink mb-1"
                 >
                   {CATEGORY_LABEL[cat]}
                 </h2>
@@ -161,7 +161,7 @@ export default function AudioPage() {
                   {items.map((t) => (
                     <div key={t.id} className="bg-cream rounded-xl p-4 card-shadow">
                       <div className="flex items-center justify-between mb-2">
-                        <span className="font-semibold text-navy text-sm">{t.title}</span>
+                        <span className="font-semibold text-ink text-sm">{t.title}</span>
                         <button
                           onClick={() => handleDelete(t.id)}
                           className="text-xs font-semibold text-rose hover:underline"

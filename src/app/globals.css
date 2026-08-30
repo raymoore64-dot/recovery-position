@@ -35,27 +35,33 @@
   font-style: italic;
 }
 
+/* "Solar Flare" palette — dark base, warm sunrise-after-a-night-shift
+   gradient accent (orange to crimson), replacing the original
+   navy/amber/cream daytime palette. Class names below are kept the same
+   as before (bg-cream, bg-navy, bg-amber, etc.) — only what they render
+   as has changed, so this file is the single source of truth for the
+   whole app's look. */
 :root {
-  --background: #fbf8f2;
-  --foreground: #262420;
+  --background: #100b0c;
+  --foreground: #f5e9e2;
+  color-scheme: dark;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
-  /* The Recovery Position brand palette */
-  --color-navy: #1e2a47;
-  --color-navy-deep: #141c30;
-  --color-navy-mid: #24304f;
-  --color-amber: #f3a468;
-  --color-amber-deep: #d97f3d;
-  --color-sage: #7c9c88;
-  --color-cream: #f6f0e4;
-  --color-paper: #fbf8f2;
-  --color-ink: #262420;
-  --color-rose: #c4694a;
-  --color-line: #e3d9c6;
+  --color-navy: #1b1315; /* header / hero / nav-inactive surface */
+  --color-navy-deep: #0d0808; /* darkest tone — text on bright badges */
+  --color-navy-mid: #2a1a16; /* hover state for dark surfaces */
+  --color-amber: #fb923c; /* primary accent — orange */
+  --color-amber-deep: #f43f5e; /* accent hover / deep end of gradient — crimson */
+  --color-sage: #34d399; /* High energy — emerald, reads clearly on dark */
+  --color-cream: #1e1719; /* card surface (roster forms, leave/library/audio cards) */
+  --color-paper: #100b0c; /* page background + recessed input fields */
+  --color-ink: #f5e9e2; /* primary text — warm off-white */
+  --color-rose: #f43f5e; /* Low energy / destructive actions — crimson */
+  --color-line: #362a2c; /* borders, visible against dark surfaces */
 
   --font-sans: "Work Sans", sans-serif;
   --font-display: "Fraunces Black", serif;
@@ -67,39 +73,56 @@ body {
   background-color: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
-  /* A very soft paper grain — barely visible, keeps flat colour fields
-     from feeling sterile. Two offset radial dot layers, no image asset. */
-  background-image:
-    radial-gradient(circle at 1px 1px, rgba(38, 36, 32, 0.035) 1px, transparent 0);
+  /* Faint warm grain instead of the old paper-texture dots — keeps the
+     dark background from feeling like a flat void. */
+  background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.025) 1px, transparent 0);
   background-size: 22px 22px;
 }
 
-/* Decorative radial glow used behind navy hero panels — echoes the
-   brochure cover's "moonbleed" circle. Apply to a `relative` container
-   with `overflow-hidden`. */
+/* Decorative radial glow behind hero/header panels — the "solar flare"
+   the palette is named for. Apply to a `relative` container with
+   `overflow-hidden`. Two overlapping glows (orange + crimson) for the
+   richer look on the hero specifically — see .moonbleed2. */
 .moonbleed {
   position: absolute;
-  top: -40%;
-  right: -30%;
-  width: 90%;
-  height: 180%;
+  top: -45%;
+  right: -25%;
+  width: 85%;
+  height: 170%;
   border-radius: 9999px;
-  background: radial-gradient(circle, var(--color-navy-mid) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(251, 146, 60, 0.55) 0%, transparent 70%);
+  filter: blur(10px);
+  pointer-events: none;
+}
+.moonbleed2 {
+  position: absolute;
+  bottom: -50%;
+  left: -20%;
+  width: 75%;
+  height: 160%;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(244, 63, 94, 0.32) 0%, transparent 70%);
+  filter: blur(10px);
   pointer-events: none;
 }
 
-/* Soft lift on primary buttons for a more tactile, designed feel. */
+/* Soft lift + glow on primary buttons — gradient-adjacent warmth even
+   though most buttons stay solid orange for legibility. */
 .btn-primary {
   transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease, color 0.15s ease;
 }
 .btn-primary:hover:not(:disabled) {
   transform: translateY(-1px);
-  box-shadow: 0 6px 14px rgba(217, 127, 61, 0.35);
+  box-shadow: 0 8px 20px rgba(244, 63, 94, 0.35);
 }
 .btn-primary:active:not(:disabled) {
   transform: translateY(0);
 }
 
+/* Dark cards need a border to read as distinct from the page background
+   — shadows alone barely show on dark-on-dark, so this replaces the old
+   light-mode drop-shadow approach. */
 .card-shadow {
-  box-shadow: 0 1px 2px rgba(38, 36, 32, 0.04), 0 8px 20px -8px rgba(30, 42, 71, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 24px 48px -28px rgba(0, 0, 0, 0.7);
 }

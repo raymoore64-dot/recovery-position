@@ -23,7 +23,7 @@ export default function NavLinks() {
             key={link.href}
             href={link.href}
             className={`px-3 py-1.5 rounded-full transition-colors ${
-              active ? "bg-amber text-navy-deep" : "text-paper/80 hover:text-amber hover:bg-white/5"
+              active ? "bg-amber text-navy-deep" : "text-ink/80 hover:text-amber hover:bg-white/5"
             }`}
           >
             {link.label}

@@ -13,7 +13,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className="h-full">
       <body className="min-h-full flex flex-col bg-paper text-ink">
-        <header className="bg-navy text-paper relative overflow-hidden">
+        <header className="bg-navy text-ink relative overflow-hidden">
           <div className="moonbleed" />
           <div className="max-w-3xl mx-auto px-5 py-4 flex items-center justify-between relative z-10">
             <Link href="/" className="flex items-center gap-3">

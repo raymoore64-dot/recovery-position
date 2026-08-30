@@ -83,7 +83,7 @@ export default function LeavePlannerPage() {
         <p className="text-xs font-bold tracking-widest uppercase text-amber-deep mb-2">
           Leave Planner
         </p>
-        <h1 style={{ fontFamily: "var(--font-display)" }} className="text-3xl text-navy mb-2 tracking-tight">
+        <h1 style={{ fontFamily: "var(--font-display)" }} className="text-3xl text-ink mb-2 tracking-tight">
           Find leave that actually recovers you.
         </h1>
         <p className="text-sm text-ink/70 max-w-lg">
@@ -96,7 +96,7 @@ export default function LeavePlannerPage() {
       <div className="bg-cream rounded-2xl p-7 space-y-4 card-shadow">
         <div className="grid grid-cols-3 gap-4">
           <label className="block">
-            <span className="text-xs font-semibold text-navy uppercase tracking-wide">
+            <span className="text-xs font-semibold text-ink uppercase tracking-wide">
               Search from
             </span>
             <input
@@ -107,7 +107,7 @@ export default function LeavePlannerPage() {
             />
           </label>
           <label className="block">
-            <span className="text-xs font-semibold text-navy uppercase tracking-wide">
+            <span className="text-xs font-semibold text-ink uppercase tracking-wide">
               Search to
             </span>
             <input
@@ -118,7 +118,7 @@ export default function LeavePlannerPage() {
             />
           </label>
           <label className="block">
-            <span className="text-xs font-semibold text-navy uppercase tracking-wide">
+            <span className="text-xs font-semibold text-ink uppercase tracking-wide">
               Min. days off
             </span>
             <input
@@ -134,7 +134,7 @@ export default function LeavePlannerPage() {
         <button
           onClick={handleSearch}
           disabled={loading}
-          className="btn-primary bg-amber text-navy-deep font-bold text-sm px-5 py-2.5 rounded-full hover:bg-amber-deep hover:text-paper transition-colors disabled:opacity-50"
+          className="btn-primary bg-amber text-navy-deep font-bold text-sm px-5 py-2.5 rounded-full hover:bg-amber-deep hover:text-ink transition-colors disabled:opacity-50"
         >
           {loading ? "Searching…" : "Find best leave dates"}
         </button>
@@ -160,7 +160,7 @@ export default function LeavePlannerPage() {
               {clampedNote}
             </p>
           )}
-          <h2 style={{ fontFamily: "var(--font-display)" }} className="text-2xl text-navy mb-4 tracking-tight">
+          <h2 style={{ fontFamily: "var(--font-display)" }} className="text-2xl text-ink mb-4 tracking-tight">
             {candidates.length === 0
               ? "No stretches that long, in this range."
               : `${candidates.length} option${candidates.length === 1 ? "" : "s"}, best first`}
@@ -178,7 +178,7 @@ export default function LeavePlannerPage() {
                   <div className="flex items-baseline justify-between mb-2">
                     <div
                       style={{ fontFamily: "var(--font-display)" }}
-                      className="text-xl text-navy tracking-tight"
+                      className="text-xl text-ink tracking-tight"
                     >
                       {formatDate(c.startDate)} — {formatDate(c.endDate)}
                     </div>
@@ -195,13 +195,13 @@ export default function LeavePlannerPage() {
                   </div>
                   <div className="grid grid-cols-2 gap-4 text-sm text-ink/75">
                     <div>
-                      <span className="text-xs font-bold uppercase tracking-wide text-navy/60">
+                      <span className="text-xs font-bold uppercase tracking-wide text-ink/60">
                         Going in
                       </span>
                       <p>{c.beforeNote}</p>
                     </div>
                     <div>
-                      <span className="text-xs font-bold uppercase tracking-wide text-navy/60">
+                      <span className="text-xs font-bold uppercase tracking-wide text-ink/60">
                         Coming back
                       </span>
                       <p>{c.afterNote}</p>

@@ -54,9 +54,9 @@ function loadNightsSurvived(): number {
 
 const energyColor: Record<DayPlan["energy"], string> = {
   High: "bg-sage text-navy-deep",
-  Recovering: "bg-amber/30 text-navy",
+  Recovering: "bg-amber/30 text-ink",
   Medium: "bg-amber/60 text-navy-deep",
-  Low: "bg-rose/70 text-paper",
+  Low: "bg-rose/70 text-ink",
 };
 
 export default function Home() {
@@ -86,7 +86,7 @@ export default function Home() {
           <div className="bg-cream rounded-2xl p-8 card-shadow">
             <p
               style={{ fontFamily: "var(--font-display)" }}
-              className="text-2xl text-navy mb-2 tracking-tight"
+              className="text-2xl text-ink mb-2 tracking-tight"
             >
               No shift logged for today.
             </p>
@@ -99,8 +99,9 @@ export default function Home() {
             </p>
           </div>
         ) : (
-          <div className="relative overflow-hidden bg-navy text-paper rounded-2xl p-8 card-shadow">
+          <div className="relative overflow-hidden bg-navy text-ink rounded-2xl p-8 card-shadow">
             <div className="moonbleed" />
+            <div className="moonbleed2" />
             <Image
               src="/icon.svg"
               alt=""
@@ -128,7 +129,7 @@ export default function Home() {
 
                 <div className="grid grid-cols-2 gap-6 text-sm">
                   <div className="border-t border-paper/15 pt-3">
-                    <div className="text-paper/60 text-xs uppercase tracking-widest mb-1 font-semibold">
+                    <div className="text-ink/60 text-xs uppercase tracking-widest mb-1 font-semibold">
                       Sleep window
                     </div>
                     <div
@@ -141,7 +142,7 @@ export default function Home() {
                     </div>
                   </div>
                   <div className="border-t border-paper/15 pt-3">
-                    <div className="text-paper/60 text-xs uppercase tracking-widest mb-1 font-semibold">
+                    <div className="text-ink/60 text-xs uppercase tracking-widest mb-1 font-semibold">
                       Caffeine cutoff
                     </div>
                     <div
@@ -185,7 +186,7 @@ export default function Home() {
               <div className="text-xs font-bold uppercase tracking-wide text-amber-deep mb-0.5">
                 {suggestedCategory ? CATEGORY_LABEL[suggestedCategory] : ""} for today
               </div>
-              <div className="font-semibold text-navy text-sm">{suggestedTrack.title}</div>
+              <div className="font-semibold text-ink text-sm">{suggestedTrack.title}</div>
             </div>
             {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
             <audio controls className="max-w-full" src={`/audio/${suggestedTrack.filename}`}>
@@ -198,7 +199,7 @@ export default function Home() {
       <section>
         <h2
           style={{ fontFamily: "var(--font-display)" }}
-          className="text-2xl text-navy mb-4 tracking-tight"
+          className="text-2xl text-ink mb-4 tracking-tight"
         >
           The next 7 days
         </h2>
@@ -211,7 +212,7 @@ export default function Home() {
                 key={p.date}
                 className="flex items-center justify-between bg-cream rounded-xl px-4 py-3.5 text-sm card-shadow"
               >
-                <div className="font-semibold text-navy w-28">{label}</div>
+                <div className="font-semibold text-ink w-28">{label}</div>
                 <div className="flex-1 text-ink/80">
                   {p.shift ? shiftLabel(p.shift.shift_type) : "—"}
                 </div>

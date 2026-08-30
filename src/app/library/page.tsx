@@ -148,7 +148,7 @@ export default function LibraryPage() {
         <p className="text-xs font-bold tracking-widest uppercase text-amber-deep mb-2">
           Rest &amp; Recovery Library
         </p>
-        <h1 style={{ fontFamily: "var(--font-display-semibold)" }} className="text-2xl text-navy mb-2">
+        <h1 style={{ fontFamily: "var(--font-display-semibold)" }} className="text-2xl text-ink mb-2">
           Forty years of actually needing this.
         </h1>
         <p className="text-sm text-ink/70 max-w-xl">
@@ -159,7 +159,7 @@ export default function LibraryPage() {
 
       {CATEGORIES.map((cat) => (
         <section key={cat.id}>
-          <div className="flex items-center gap-3 mb-2 text-navy">
+          <div className="flex items-center gap-3 mb-2 text-ink">
             <SectionIcon id={cat.id} />
             <h2 style={{ fontFamily: "var(--font-display-semibold)" }} className="text-lg">
               {cat.label}
@@ -169,7 +169,7 @@ export default function LibraryPage() {
           <div className="space-y-3">
             {cat.entries.map((entry) => (
               <div key={entry.title} className="bg-cream rounded-lg p-4">
-                <div className="font-semibold text-navy text-sm mb-1">{entry.title}</div>
+                <div className="font-semibold text-ink text-sm mb-1">{entry.title}</div>
                 <p className="text-sm text-ink/75">{entry.body}</p>
               </div>
             ))}
