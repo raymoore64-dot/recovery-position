@@ -35,6 +35,14 @@ db.exec(`
     category TEXT NOT NULL,     -- 'wind-down' | 'sleep' | 'relaxation' | 'energize'
     created_at TEXT NOT NULL DEFAULT (datetime('now'))
   );
+
+  CREATE TABLE IF NOT EXISTS certifications (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    expiry_date TEXT NOT NULL,  -- ISO date, e.g. "2027-03-14"
+    notes TEXT,
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+  );
 `);
 
 // Migration: "source" distinguishes curated tracks (yours) from tracks
@@ -73,5 +81,13 @@ export interface Track {
   filename: string;
   category: AudioCategory;
   source: TrackSource;
+  created_at: string;
+}
+
+export interface Certification {
+  id: number;
+  name: string;
+  expiry_date: string;
+  notes: string | null;
   created_at: string;
 }
