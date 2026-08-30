@@ -77,6 +77,24 @@ export default function Home() {
 
   return (
     <div className="space-y-12">
+      <div className="flex items-center gap-3 sm:gap-4">
+        <Image src="/icon.svg" alt="" width={52} height={52} className="shrink-0 sm:w-16 sm:h-16" />
+        <div>
+          <h1
+            style={{ fontFamily: "var(--font-display)" }}
+            className="text-2xl sm:text-4xl tracking-tight text-ink leading-none"
+          >
+            The Recovery Position
+          </h1>
+          <p
+            style={{ fontFamily: "var(--font-display-italic)" }}
+            className="text-amber-deep text-xs sm:text-sm mt-1"
+          >
+            Your roster runs your life. Might as well let it run something useful too.
+          </p>
+        </div>
+      </div>
+
       <section>
         <p className="text-xs font-bold tracking-widest uppercase text-amber-deep mb-3">
           Today &middot; {weekday}

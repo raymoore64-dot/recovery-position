@@ -117,14 +117,22 @@ export default function AudioPage() {
   const [source, setSource] = useState<TrackSource>("upload");
   const [saving, setSaving] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   async function load() {
     setLoading(true);
-    const res = await fetch("/api/tracks");
-    const data = await res.json();
-    setTracks(data);
-    setShowAddForm(data.length === 0);
-    setLoading(false);
+    setLoadError(null);
+    try {
+      const res = await fetch("/api/tracks");
+      if (!res.ok) throw new Error(`Server returned ${res.status}`);
+      const data = await res.json();
+      setTracks(data);
+      setShowAddForm(data.length === 0);
+    } catch (err) {
+      setLoadError(err instanceof Error ? err.message : "Failed to load tracks.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   useEffect(() => {
@@ -183,7 +191,12 @@ export default function AudioPage() {
         </p>
       </div>
 
-      {loading ? (
+      {loadError ? (
+        <div className="bg-cream rounded-2xl p-6 card-shadow">
+          <p className="text-sm text-rose font-semibold mb-2">Couldn&apos;t load your tracks.</p>
+          <p className="text-sm text-ink/60">{loadError}</p>
+        </div>
+      ) : loading ? (
         <p className="text-sm text-ink/60">Loading…</p>
       ) : (
         <>
