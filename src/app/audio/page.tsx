@@ -3,12 +3,14 @@
 import { useEffect, useState } from "react";
 
 type AudioCategory = "wind-down" | "sleep" | "relaxation" | "energize";
+type TrackSource = "collection" | "upload";
 
 interface Track {
   id: number;
   title: string;
   filename: string;
   category: AudioCategory;
+  source: TrackSource;
 }
 
 const CATEGORY_LABEL: Record<AudioCategory, string> = {
@@ -59,14 +61,62 @@ function CategoryIcon({ category }: { category: AudioCategory }) {
   }
 }
 
+function TrackGrid({ items, onDelete }: { items: Track[]; onDelete: (id: number) => void }) {
+  const grouped = (Object.keys(CATEGORY_LABEL) as AudioCategory[]).map((cat) => ({
+    cat,
+    items: items.filter((t) => t.category === cat),
+  }));
+
+  if (items.length === 0) return null;
+
+  return (
+    <div className="space-y-6">
+      {grouped.map(({ cat, items }) =>
+        items.length === 0 ? null : (
+          <div key={cat}>
+            <div className="flex items-center gap-2 mb-1">
+              <CategoryIcon category={cat} />
+              <h3 style={{ fontFamily: "var(--font-display-semibold)" }} className="text-base text-ink">
+                {CATEGORY_LABEL[cat]}
+              </h3>
+            </div>
+            <p className="text-xs text-ink/50 mb-3">{CATEGORY_HINT[cat]}</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {items.map((t) => (
+                <div key={t.id} className="bg-cream rounded-xl p-4 card-shadow">
+                  <div className="flex items-center justify-between mb-2.5">
+                    <span className="font-semibold text-ink text-sm">{t.title}</span>
+                    <button
+                      onClick={() => onDelete(t.id)}
+                      className="text-xs font-semibold text-rose hover:underline shrink-0 ml-2"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                  {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+                  <audio controls className="w-full" src={`/audio/${t.filename}`}>
+                    Your browser doesn&apos;t support inline audio playback.
+                  </audio>
+                </div>
+              ))}
+            </div>
+          </div>
+        )
+      )}
+    </div>
+  );
+}
+
 export default function AudioPage() {
   const [tracks, setTracks] = useState<Track[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
   const [title, setTitle] = useState("");
-  const [filename, setFilename] = useState("");
+  const [file, setFile] = useState<File | null>(null);
   const [category, setCategory] = useState<AudioCategory>("wind-down");
+  const [source, setSource] = useState<TrackSource>("upload");
   const [saving, setSaving] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
 
   async function load() {
     setLoading(true);
@@ -83,17 +133,30 @@ export default function AudioPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!title.trim() || !filename.trim()) return;
+    if (!title.trim() || !file) return;
     setSaving(true);
-    await fetch("/api/tracks", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title, filename, category }),
-    });
-    setTitle("");
-    setFilename("");
-    setSaving(false);
-    await load();
+    setUploadError(null);
+
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("category", category);
+    formData.append("source", source);
+    formData.append("file", file);
+
+    try {
+      const res = await fetch("/api/tracks/upload", { method: "POST", body: formData });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "Upload failed.");
+      }
+      setTitle("");
+      setFile(null);
+      await load();
+    } catch (err) {
+      setUploadError(err instanceof Error ? err.message : "Upload failed.");
+    } finally {
+      setSaving(false);
+    }
   }
 
   async function handleDelete(id: number) {
@@ -101,13 +164,11 @@ export default function AudioPage() {
     await load();
   }
 
-  const grouped = (Object.keys(CATEGORY_LABEL) as AudioCategory[]).map((cat) => ({
-    cat,
-    items: tracks.filter((t) => t.category === cat),
-  }));
+  const collectionTracks = tracks.filter((t) => t.source === "collection");
+  const uploadTracks = tracks.filter((t) => t.source === "upload");
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-10">
       <div>
         <p className="text-xs font-bold tracking-widest uppercase text-amber-deep mb-2">
           Afterglow
@@ -116,50 +177,38 @@ export default function AudioPage() {
           Choose what quiets you.
         </h1>
         <p className="text-sm text-ink/70 max-w-lg">
-          Your own collection, sorted for the moment. The Daily Card picks one automatically,
-          but this is yours to browse and play whatever actually fits right now.
+          A curated collection, plus anything you or anyone using this add of their own. The
+          Daily Card picks one automatically, but this is yours to browse and play whatever
+          actually fits right now.
         </p>
       </div>
 
       {loading ? (
         <p className="text-sm text-ink/60">Loading…</p>
-      ) : tracks.length === 0 ? (
-        <p className="text-sm text-ink/60">Nothing in the collection yet — add your first track below.</p>
       ) : (
-        <div className="space-y-8">
-          {grouped.map(({ cat, items }) =>
-            items.length === 0 ? null : (
-              <section key={cat}>
-                <div className="flex items-center gap-2 mb-1">
-                  <CategoryIcon category={cat} />
-                  <h2 style={{ fontFamily: "var(--font-display-semibold)" }} className="text-lg text-ink">
-                    {CATEGORY_LABEL[cat]}
-                  </h2>
-                </div>
-                <p className="text-xs text-ink/50 mb-3">{CATEGORY_HINT[cat]}</p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {items.map((t) => (
-                    <div key={t.id} className="bg-cream rounded-xl p-4 card-shadow">
-                      <div className="flex items-center justify-between mb-2.5">
-                        <span className="font-semibold text-ink text-sm">{t.title}</span>
-                        <button
-                          onClick={() => handleDelete(t.id)}
-                          className="text-xs font-semibold text-rose hover:underline shrink-0 ml-2"
-                        >
-                          Remove
-                        </button>
-                      </div>
-                      {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-                      <audio controls className="w-full" src={`/audio/${t.filename}`}>
-                        Your browser doesn&apos;t support inline audio playback.
-                      </audio>
-                    </div>
-                  ))}
-                </div>
-              </section>
-            )
+        <>
+          {collectionTracks.length > 0 && (
+            <section>
+              <h2 style={{ fontFamily: "var(--font-display)" }} className="text-xl text-ink mb-4 tracking-tight">
+                My Collection
+              </h2>
+              <TrackGrid items={collectionTracks} onDelete={handleDelete} />
+            </section>
           )}
-        </div>
+
+          {uploadTracks.length > 0 && (
+            <section>
+              <h2 style={{ fontFamily: "var(--font-display)" }} className="text-xl text-ink mb-4 tracking-tight">
+                Uploads
+              </h2>
+              <TrackGrid items={uploadTracks} onDelete={handleDelete} />
+            </section>
+          )}
+
+          {tracks.length === 0 && (
+            <p className="text-sm text-ink/60">Nothing here yet — add your first track below.</p>
+          )}
+        </>
       )}
 
       <div className="pt-2">
@@ -168,13 +217,13 @@ export default function AudioPage() {
             onClick={() => setShowAddForm(true)}
             className="text-sm font-bold text-amber-deep hover:underline"
           >
-            + Add a track to your collection
+            + Upload a track
           </button>
         ) : (
           <div className="bg-cream rounded-2xl p-5 sm:p-6 card-shadow">
             <div className="flex items-center justify-between mb-4">
               <h2 style={{ fontFamily: "var(--font-display-semibold)" }} className="text-lg text-ink">
-                Add a track
+                Upload a track
               </h2>
               {tracks.length > 0 && (
                 <button
@@ -186,11 +235,35 @@ export default function AudioPage() {
               )}
             </div>
             <p className="text-sm text-ink/70 mb-4">
-              First, copy your audio file (mp3, m4a, etc.) into the{" "}
-              <code className="bg-paper px-1.5 py-0.5 rounded text-xs">public/audio/</code> folder of
-              this project. Then add it here with the exact filename.
+              Upload an audio file (mp3, m4a, wav, ogg, aac, or flac) directly — no need to touch
+              any project folders.
             </p>
             <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <span className="text-xs font-semibold text-ink uppercase tracking-wide">
+                  Add to
+                </span>
+                <div className="flex gap-2 mt-1">
+                  <button
+                    type="button"
+                    onClick={() => setSource("collection")}
+                    className={`px-3.5 py-2 text-xs font-bold rounded-full transition-colors ${
+                      source === "collection" ? "bg-amber text-navy-deep" : "bg-paper text-ink/60 hover:text-ink"
+                    }`}
+                  >
+                    My Collection
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSource("upload")}
+                    className={`px-3.5 py-2 text-xs font-bold rounded-full transition-colors ${
+                      source === "upload" ? "bg-amber text-navy-deep" : "bg-paper text-ink/60 hover:text-ink"
+                    }`}
+                  >
+                    Uploads
+                  </button>
+                </div>
+              </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <label className="block">
                   <span className="text-xs font-semibold text-ink uppercase tracking-wide">Title</span>
@@ -205,14 +278,13 @@ export default function AudioPage() {
                 </label>
                 <label className="block">
                   <span className="text-xs font-semibold text-ink uppercase tracking-wide">
-                    Filename in public/audio/
+                    Audio file
                   </span>
                   <input
-                    type="text"
-                    value={filename}
-                    onChange={(e) => setFilename(e.target.value)}
-                    placeholder="e.g. skye-winddown.mp3"
-                    className="mt-1 w-full rounded-md border border-line bg-paper px-3 py-2 text-sm"
+                    type="file"
+                    accept="audio/*,.mp3,.m4a,.wav,.ogg,.aac,.flac"
+                    onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+                    className="mt-1 w-full rounded-md border border-line bg-paper px-3 py-2 text-sm file:mr-3 file:rounded file:border-0 file:bg-amber file:text-navy-deep file:font-bold file:px-3 file:py-1 file:text-xs"
                     required
                   />
                 </label>
@@ -231,12 +303,17 @@ export default function AudioPage() {
                   ))}
                 </select>
               </label>
+              {uploadError && (
+                <div className="text-sm text-rose bg-paper border border-rose/30 rounded-md p-3">
+                  {uploadError}
+                </div>
+              )}
               <button
                 type="submit"
-                disabled={saving}
+                disabled={saving || !title.trim() || !file}
                 className="btn-primary bg-amber text-navy-deep font-bold text-sm px-5 py-2.5 rounded-full hover:bg-amber-deep hover:text-ink transition-colors disabled:opacity-50"
               >
-                {saving ? "Adding…" : "Add track"}
+                {saving ? "Uploading…" : "Upload track"}
               </button>
             </form>
           </div>
