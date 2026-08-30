@@ -1,6 +1,8 @@
-import db, { Shift } from "@/lib/db";
+import db, { Shift, Track } from "@/lib/db";
 import { buildPlan, shiftLabel, DayPlan } from "@/lib/schedule";
 import { quipFor } from "@/lib/quips";
+import { categoryFor, pickTrack, CATEGORY_LABEL } from "@/lib/audio";
+import { toLocalISODate } from "@/lib/date";
 import Link from "next/link";
 import Image from "next/image";
 import RecoveryDial from "@/components/RecoveryDial";
@@ -66,6 +68,12 @@ export default function Home() {
     day: "numeric",
     month: "long",
   });
+
+  const allTracks = db.prepare("SELECT * FROM tracks").all() as Track[];
+  const suggestedCategory = categoryFor(todayPlan);
+  const suggestedTrack = suggestedCategory
+    ? pickTrack(allTracks, suggestedCategory, todayPlan.date)
+    : null;
 
   return (
     <div className="space-y-12">
@@ -169,6 +177,21 @@ export default function Home() {
             🌙 {nightsSurvived.toLocaleString()} night shift{nightsSurvived === 1 ? "" : "s"}{" "}
             survived and counting.
           </p>
+        )}
+
+        {suggestedTrack && (
+          <div className="mt-4 bg-cream rounded-xl p-4 card-shadow flex items-center justify-between gap-4 flex-wrap">
+            <div>
+              <div className="text-xs font-bold uppercase tracking-wide text-amber-deep mb-0.5">
+                {suggestedCategory ? CATEGORY_LABEL[suggestedCategory] : ""} for today
+              </div>
+              <div className="font-semibold text-navy text-sm">{suggestedTrack.title}</div>
+            </div>
+            {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+            <audio controls className="max-w-full" src={`/audio/${suggestedTrack.filename}`}>
+              Your browser doesn&apos;t support inline audio playback.
+            </audio>
+          </div>
         )}
       </section>
 
