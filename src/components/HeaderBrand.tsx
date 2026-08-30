@@ -7,22 +7,25 @@ import { usePathname } from "next/navigation";
 export default function HeaderBrand() {
   const pathname = usePathname();
   // The Today page has its own larger brand moment right at the top of
-  // its content, so showing the full wordmark here too would just repeat
-  // it a few pixels below. Keep the icon (still a working link home) and
-  // drop the text only on that one page.
-  const showWordmark = pathname !== "/";
+  // its content — icon, wordmark, and tagline all together. Showing the
+  // header's icon there too, with nothing next to it, just looked like a
+  // stray logo. Simplest fix: on that one page, the header shows nothing
+  // on the left at all, letting the nav sit on its own.
+  const isHome = pathname === "/";
+
+  if (isHome) {
+    return <div />;
+  }
 
   return (
     <Link href="/" className="flex items-center gap-2.5 sm:gap-3 min-w-0">
       <Image src="/icon.svg" alt="" width={34} height={34} className="shrink-0 sm:w-[38px] sm:h-[38px]" />
-      {showWordmark && (
-        <span
-          style={{ fontFamily: "var(--font-display-semibold)" }}
-          className="text-base sm:text-xl tracking-tight truncate"
-        >
-          The Recovery Position
-        </span>
-      )}
+      <span
+        style={{ fontFamily: "var(--font-display-semibold)" }}
+        className="text-base sm:text-xl tracking-tight truncate"
+      >
+        The Recovery Position
+      </span>
     </Link>
   );
 }
