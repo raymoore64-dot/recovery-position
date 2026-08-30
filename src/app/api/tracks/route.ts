@@ -10,21 +10,19 @@ export async function GET() {
   return NextResponse.json(rows);
 }
 
-// Kept for programmatic/manual entry (e.g. a track already sitting in
-// public/audio/ from before the upload button existed). The normal path
-// for adding a track is now POST /api/tracks/upload.
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const { title, filename, category } = body;
+  const { title, filename, category, source } = body;
 
   if (!title || !filename || !category) {
     return NextResponse.json({ error: "title, filename, and category are required" }, { status: 400 });
   }
 
-  db.prepare("INSERT INTO tracks (title, filename, category) VALUES (?, ?, ?)").run(
+  db.prepare("INSERT INTO tracks (title, filename, category, source) VALUES (?, ?, ?, ?)").run(
     title,
     filename,
-    category
+    category,
+    source || "upload"
   );
 
   return NextResponse.json({ ok: true });
@@ -37,9 +35,6 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ error: "id is required" }, { status: 400 });
   }
 
-  // Look up the filename before deleting the row, so the underlying audio
-  // file can be cleaned up too — otherwise uploads pile up in public/audio/
-  // forever even after their track entry is removed.
   const track = db.prepare("SELECT * FROM tracks WHERE id = ?").get(id) as Track | undefined;
   db.prepare("DELETE FROM tracks WHERE id = ?").run(id);
 

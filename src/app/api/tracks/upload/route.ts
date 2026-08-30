@@ -14,8 +14,6 @@ function safeFilename(originalName: string): string {
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)/g, "")
     .slice(0, 60);
-  // Timestamp prefix avoids collisions between tracks with the same
-  // original filename, without needing the user to think about naming.
   return `${Date.now()}-${base || "track"}${ext}`;
 }
 
@@ -24,6 +22,7 @@ export async function POST(req: NextRequest) {
   const file = formData.get("file") as File | null;
   const title = formData.get("title") as string | null;
   const category = formData.get("category") as string | null;
+  const source = (formData.get("source") as string | null) || "upload";
 
   if (!file || !title || !category) {
     return NextResponse.json({ error: "file, title, and category are required" }, { status: 400 });
@@ -45,10 +44,11 @@ export async function POST(req: NextRequest) {
   const bytes = await file.arrayBuffer();
   fs.writeFileSync(path.join(AUDIO_DIR, filename), Buffer.from(bytes));
 
-  db.prepare("INSERT INTO tracks (title, filename, category) VALUES (?, ?, ?)").run(
+  db.prepare("INSERT INTO tracks (title, filename, category, source) VALUES (?, ?, ?, ?)").run(
     title,
     filename,
-    category
+    category,
+    source
   );
 
   return NextResponse.json({ ok: true, filename });

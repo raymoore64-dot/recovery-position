@@ -37,6 +37,19 @@ db.exec(`
   );
 `);
 
+// Migration: "source" distinguishes curated tracks (yours) from tracks
+// anyone else uploads, so the two can display as separate sections. This
+// runs as a migration rather than being in the CREATE TABLE above because
+// databases created before this feature existed already have a `tracks`
+// table without this column — SQLite has no "ADD COLUMN IF NOT EXISTS",
+// so the safe pattern is: try to add it, ignore the error if it's already
+// there.
+try {
+  db.exec(`ALTER TABLE tracks ADD COLUMN source TEXT NOT NULL DEFAULT 'upload'`);
+} catch {
+  // Column already exists — nothing to do.
+}
+
 export default db;
 
 export type ShiftType = "day" | "night" | "long_day" | "off";
@@ -52,11 +65,13 @@ export interface Shift {
 }
 
 export type AudioCategory = "wind-down" | "sleep" | "relaxation" | "energize";
+export type TrackSource = "collection" | "upload";
 
 export interface Track {
   id: number;
   title: string;
   filename: string;
   category: AudioCategory;
+  source: TrackSource;
   created_at: string;
 }
