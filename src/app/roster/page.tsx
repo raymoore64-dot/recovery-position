@@ -531,12 +531,12 @@ export default function RosterPage() {
                       type="date"
                       value={s.date}
                       onChange={(e) => updateScannedRow(i, { date: e.target.value })}
-                      className="rounded border border-line px-2 py-1 text-xs"
+                      className="rounded border border-line bg-paper text-ink px-2 py-1 text-xs"
                     />
                     <select
                       value={s.shift_type}
                       onChange={(e) => updateScannedRow(i, { shift_type: e.target.value as ShiftType })}
-                      className="rounded border border-line px-2 py-1 text-xs"
+                      className="rounded border border-line bg-paper text-ink px-2 py-1 text-xs"
                     >
                       <option value="day">Day</option>
                       <option value="night">Night</option>
@@ -549,13 +549,13 @@ export default function RosterPage() {
                           type="time"
                           value={s.start_time ?? ""}
                           onChange={(e) => updateScannedRow(i, { start_time: e.target.value })}
-                          className="rounded border border-line px-2 py-1 text-xs"
+                          className="rounded border border-line bg-paper text-ink px-2 py-1 text-xs"
                         />
                         <input
                           type="time"
                           value={s.end_time ?? ""}
                           onChange={(e) => updateScannedRow(i, { end_time: e.target.value })}
-                          className="rounded border border-line px-2 py-1 text-xs"
+                          className="rounded border border-line bg-paper text-ink px-2 py-1 text-xs"
                         />
                       </>
                     )}
