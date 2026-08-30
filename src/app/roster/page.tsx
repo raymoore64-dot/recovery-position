@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { toLocalISODate } from "@/lib/date";
 
 type ShiftType = "day" | "night" | "long_day" | "off";
 
@@ -34,13 +35,13 @@ const SHIFT_FULL: Record<ShiftType, string> = {
 };
 
 function todayISO() {
-  return new Date().toISOString().slice(0, 10);
+  return toLocalISODate(new Date());
 }
 
 function addDays(iso: string, n: number): string {
   const d = new Date(iso + "T00:00:00");
   d.setDate(d.getDate() + n);
-  return d.toISOString().slice(0, 10);
+  return toLocalISODate(d);
 }
 
 interface GeneratedShift {

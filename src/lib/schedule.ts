@@ -1,4 +1,5 @@
 import { Shift, ShiftType } from "./db";
+import { toLocalISODate } from "./date";
 
 export interface DayPlan {
   date: string;
@@ -93,7 +94,7 @@ export function buildPlan(dates: string[], shiftsByDate: Map<string, Shift>): Da
     const today = shiftsByDate.get(date) ?? null;
     const prevDate = new Date(date);
     prevDate.setDate(prevDate.getDate() - 1);
-    const yesterday = shiftsByDate.get(prevDate.toISOString().slice(0, 10)) ?? null;
+    const yesterday = shiftsByDate.get(toLocalISODate(prevDate)) ?? null;
 
     if (today?.shift_type === "night") {
       consecutiveNights += 1;

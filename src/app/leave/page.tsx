@@ -3,15 +3,16 @@
 import { useState } from "react";
 import { Shift } from "@/lib/db";
 import { findLeaveCandidates, LeaveCandidate } from "@/lib/leave";
+import { toLocalISODate } from "@/lib/date";
 
 function todayISO() {
-  return new Date().toISOString().slice(0, 10);
+  return toLocalISODate(new Date());
 }
 
 function addMonths(iso: string, n: number): string {
   const d = new Date(iso + "T00:00:00");
   d.setMonth(d.getMonth() + n);
-  return d.toISOString().slice(0, 10);
+  return toLocalISODate(d);
 }
 
 function formatDate(iso: string): string {
@@ -67,7 +68,7 @@ export default function LeavePlannerPage() {
     const cursor = new Date(rangeStart + "T00:00:00");
     const end = new Date(effectiveEnd + "T00:00:00");
     while (cursor <= end) {
-      dates.push(cursor.toISOString().slice(0, 10));
+      dates.push(toLocalISODate(cursor));
       cursor.setDate(cursor.getDate() + 1);
     }
 

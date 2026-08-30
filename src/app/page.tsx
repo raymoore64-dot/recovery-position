@@ -10,7 +10,7 @@ import RecoveryDial from "@/components/RecoveryDial";
 export const dynamic = "force-dynamic";
 
 function isoDate(d: Date): string {
-  return d.toISOString().slice(0, 10);
+  return toLocalISODate(d);
 }
 
 function loadWeekPlan(): DayPlan[] {
