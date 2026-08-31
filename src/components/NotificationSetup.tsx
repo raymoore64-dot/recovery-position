@@ -2,14 +2,20 @@
 
 import { useEffect, useState } from "react";
 
+export interface ReminderItem {
+  id: string;
+  label: string;
+  body: string;
+  time: string; // ISO string
+}
+
 interface NotificationSetupProps {
-  sleepWindowStart: string | null; // ISO string
-  caffeineCutoff: string | null; // ISO string
+  reminders: ReminderItem[];
 }
 
 const STORAGE_KEY = "recovery-position-notifications-enabled";
 
-export default function NotificationSetup({ sleepWindowStart, caffeineCutoff }: NotificationSetupProps) {
+export default function NotificationSetup({ reminders }: NotificationSetupProps) {
   const [supported, setSupported] = useState(true);
   const [permission, setPermission] = useState<NotificationPermission>("default");
   const [enabled, setEnabled] = useState(false);
@@ -32,26 +38,12 @@ export default function NotificationSetup({ sleepWindowStart, caffeineCutoff }: 
     const now = Date.now();
     let count = 0;
 
-    if (caffeineCutoff) {
-      const target = new Date(caffeineCutoff).getTime();
+    for (const reminder of reminders) {
+      const target = new Date(reminder.time).getTime();
       if (target > now) {
         const id = window.setTimeout(() => {
-          new Notification("Caffeine cutoff", {
-            body: "Last call for coffee if you want to actually sleep later.",
-            icon: "/icon.svg",
-          });
-        }, target - now);
-        timers.push(id);
-        count++;
-      }
-    }
-
-    if (sleepWindowStart) {
-      const target = new Date(sleepWindowStart).getTime();
-      if (target > now) {
-        const id = window.setTimeout(() => {
-          new Notification("Sleep window", {
-            body: "This is roughly when your recommended sleep window starts.",
+          new Notification(reminder.label, {
+            body: reminder.body,
             icon: "/icon.svg",
           });
         }, target - now);
@@ -65,7 +57,8 @@ export default function NotificationSetup({ sleepWindowStart, caffeineCutoff }: 
     return () => {
       timers.forEach((id) => window.clearTimeout(id));
     };
-  }, [enabled, permission, sleepWindowStart, caffeineCutoff]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [enabled, permission, JSON.stringify(reminders)]);
 
   async function handleEnable() {
     if (!("Notification" in window)) return;
@@ -84,12 +77,8 @@ export default function NotificationSetup({ sleepWindowStart, caffeineCutoff }: 
 
   if (!supported) return null;
 
-  const hasFutureTargets =
-    Boolean(caffeineCutoff && new Date(caffeineCutoff).getTime() > Date.now()) ||
-    Boolean(sleepWindowStart && new Date(sleepWindowStart).getTime() > Date.now());
+  const hasFutureTargets = reminders.some((r) => new Date(r.time).getTime() > Date.now());
 
-  // Nothing left today worth reminding about, and reminders aren't
-  // already on — no point showing the card at all.
   if (!hasFutureTargets && !enabled) return null;
 
   return (
@@ -103,7 +92,7 @@ export default function NotificationSetup({ sleepWindowStart, caffeineCutoff }: 
             ? `On for today${scheduledCount > 0 ? ` — ${scheduledCount} scheduled` : ""} — while this tab stays open.`
             : permission === "denied"
               ? "Blocked in your browser settings — allow notifications for this site to use this."
-              : "Get a browser notification at your caffeine cutoff and sleep window."}
+              : "Get a browser notification for your caffeine cutoff, sleep window, and any medications."}
         </div>
       </div>
       {permission !== "denied" &&

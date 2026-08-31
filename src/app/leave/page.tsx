@@ -95,6 +95,9 @@ export default function LeavePlannerPage() {
         <Link href="/travel" className="text-xs font-semibold text-amber-deep hover:underline mt-2 inline-block">
           Flight or event during a shift block? Work out when to sleep →
         </Link>
+        <Link href="/share" className="text-xs font-semibold text-amber-deep hover:underline mt-2 inline-block sm:ml-4">
+          Let someone see when you're free →
+        </Link>
       </div>
 
       <div className="bg-cream rounded-2xl p-7 space-y-4 card-shadow">

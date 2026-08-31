@@ -50,6 +50,21 @@ db.exec(`
     author TEXT NOT NULL,
     created_at TEXT NOT NULL DEFAULT (datetime('now'))
   );
+
+  CREATE TABLE IF NOT EXISTS share_links (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    token TEXT NOT NULL UNIQUE,
+    label TEXT,
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+
+  CREATE TABLE IF NOT EXISTS medications (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    times TEXT NOT NULL,
+    notes TEXT,
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+  );
 `);
 
 // Migration: "source" distinguishes curated tracks (yours) from tracks
@@ -103,5 +118,20 @@ export interface PersonalQuote {
   id: number;
   text: string;
   author: string;
+  created_at: string;
+}
+
+export interface ShareLink {
+  id: number;
+  token: string;
+  label: string | null;
+  created_at: string;
+}
+
+export interface Medication {
+  id: number;
+  name: string;
+  times: string;
+  notes: string | null;
   created_at: string;
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 interface Certification {
   id: number;
@@ -116,6 +117,9 @@ export default function CertificationsPage() {
           an expiry date. Add it once and it&apos;ll flag itself when it&apos;s due, on this page
           and on your Daily Card.
         </p>
+        <Link href="/medications" className="text-xs font-semibold text-amber-deep hover:underline mt-2 inline-block">
+          Looking for medication reminders? →
+        </Link>
       </div>
 
       <div className="bg-cream rounded-2xl p-5 sm:p-7 space-y-4 card-shadow">

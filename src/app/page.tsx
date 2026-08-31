@@ -1,4 +1,4 @@
-import db, { Shift, Track, Certification, PersonalQuote } from "@/lib/db";
+import db, { Shift, Track, Certification, PersonalQuote, Medication } from "@/lib/db";
 import { buildPlan, shiftLabel, DayPlan } from "@/lib/schedule";
 import { quipFor } from "@/lib/quips";
 import { categoryFor, pickTrack, CATEGORY_LABEL } from "@/lib/audio";
@@ -10,7 +10,7 @@ import { resolveActiveShiftDate } from "@/lib/activeShift";
 import Link from "next/link";
 import Image from "next/image";
 import RecoveryDial from "@/components/RecoveryDial";
-import NotificationSetup from "@/components/NotificationSetup";
+import NotificationSetup, { ReminderItem } from "@/components/NotificationSetup";
 
 // This page reads live data (today's date, current shifts) on every
 // request, so it must never be statically prerendered at build time.
@@ -110,6 +110,39 @@ export default function Home() {
   const dailyQuote = pickDailyQuote(personalQuotes, todayPlan.date);
 
   const notifTimes = todayPlan.shift ? notificationTimesFor(todayPlan.shift) : { sleepWindowStart: null, caffeineCutoff: null };
+
+  const reminders: ReminderItem[] = [];
+  if (notifTimes.caffeineCutoff) {
+    reminders.push({
+      id: "caffeine",
+      label: "Caffeine cutoff",
+      body: "Last call for coffee if you want to actually sleep later.",
+      time: notifTimes.caffeineCutoff.toISOString(),
+    });
+  }
+  if (notifTimes.sleepWindowStart) {
+    reminders.push({
+      id: "sleep",
+      label: "Sleep window",
+      body: "This is roughly when your recommended sleep window starts.",
+      time: notifTimes.sleepWindowStart.toISOString(),
+    });
+  }
+
+  // Medication reminders are absolute clock times set by the user, tied
+  // to the real calendar date — not shift-relative like the two above.
+  const medications = db.prepare("SELECT * FROM medications").all() as Medication[];
+  for (const med of medications) {
+    const times: string[] = JSON.parse(med.times);
+    for (const t of times) {
+      reminders.push({
+        id: `med-${med.id}-${t}`,
+        label: med.name,
+        body: med.notes || "Time for your medication.",
+        time: new Date(`${realTodayISO}T${t}:00`).toISOString(),
+      });
+    }
+  }
 
   return (
     <div className="space-y-12">
@@ -236,10 +269,7 @@ export default function Home() {
           </p>
         )}
 
-        <NotificationSetup
-          sleepWindowStart={notifTimes.sleepWindowStart ? notifTimes.sleepWindowStart.toISOString() : null}
-          caffeineCutoff={notifTimes.caffeineCutoff ? notifTimes.caffeineCutoff.toISOString() : null}
-        />
+        <NotificationSetup reminders={reminders} />
 
         {suggestedTrack && (
           <div className="mt-4 bg-cream rounded-xl p-4 card-shadow flex items-center justify-between gap-4 flex-wrap">
