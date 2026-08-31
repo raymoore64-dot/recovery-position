@@ -126,7 +126,7 @@ export default function TravelPage() {
         <button
           onClick={handleCalculate}
           disabled={loading}
-          className="btn-primary bg-amber text-navy-deep font-bold text-sm px-5 py-2.5 rounded-full hover:bg-amber-deep hover:text-ink transition-colors disabled:opacity-50"
+          className="btn-primary bg-amber text-navy-deep font-bold text-sm px-5 py-2.5 min-h-[44px] rounded-full hover:bg-amber-deep hover:text-ink transition-colors disabled:opacity-50"
         >
           {loading ? "Working it out…" : "Calculate"}
         </button>

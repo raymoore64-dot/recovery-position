@@ -86,12 +86,13 @@ export default function LibraryTimer({ minutes, label }: LibraryTimerProps) {
         <div className="flex gap-2 mt-1">
           <button
             onClick={toggle}
-            className="text-xs font-bold px-3 py-1 rounded-full bg-amber text-navy-deep hover:bg-amber-deep hover:text-ink transition-colors"
+            className="text-xs font-bold px-4 rounded-full bg-amber text-navy-deep hover:bg-amber-deep hover:text-ink transition-colors inline-flex items-center justify-center"
+            style={{ minHeight: 44 }}
           >
             {done ? "Start again" : running ? "Pause" : remaining === totalSeconds ? "Start" : "Resume"}
           </button>
           {remaining !== totalSeconds && (
-            <button onClick={reset} className="text-xs font-semibold text-ink/50 hover:text-ink">
+            <button onClick={reset} className="text-xs font-semibold text-ink/50 hover:text-ink tap-link">
               Reset
             </button>
           )}

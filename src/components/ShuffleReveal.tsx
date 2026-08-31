@@ -26,7 +26,7 @@ export default function ShuffleReveal({ allEntries }: ShuffleRevealProps) {
       <button
         onClick={shuffle}
         disabled={spinning}
-        className="btn-primary bg-amber text-navy-deep font-bold text-sm px-5 py-2.5 rounded-full hover:bg-amber-deep hover:text-ink transition-colors disabled:opacity-60"
+        className="btn-primary bg-amber text-navy-deep font-bold text-sm px-5 py-2.5 min-h-[44px] rounded-full hover:bg-amber-deep hover:text-ink transition-colors disabled:opacity-60"
       >
         {spinning ? "Shuffling…" : revealed ? "Shuffle again" : "🎲 Surprise me"}
       </button>

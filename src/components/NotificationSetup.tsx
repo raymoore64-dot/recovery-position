@@ -97,7 +97,7 @@ export default function NotificationSetup({ reminders }: NotificationSetupProps)
       </div>
       {permission !== "denied" &&
         (enabled ? (
-          <button onClick={handleDisable} className="text-xs font-semibold text-rose hover:underline shrink-0">
+          <button onClick={handleDisable} className="text-xs font-semibold text-rose hover:underline tap-link shrink-0">
             Turn off
           </button>
         ) : (

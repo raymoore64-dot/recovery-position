@@ -141,7 +141,7 @@ export default function LeavePlannerPage() {
         <button
           onClick={handleSearch}
           disabled={loading}
-          className="btn-primary bg-amber text-navy-deep font-bold text-sm px-5 py-2.5 rounded-full hover:bg-amber-deep hover:text-ink transition-colors disabled:opacity-50"
+          className="btn-primary bg-amber text-navy-deep font-bold text-sm px-5 py-2.5 min-h-[44px] rounded-full hover:bg-amber-deep hover:text-ink transition-colors disabled:opacity-50"
         >
           {loading ? "Searching…" : "Find best leave dates"}
         </button>

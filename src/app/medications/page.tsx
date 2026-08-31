@@ -115,7 +115,7 @@ export default function MedicationsPage() {
                     <button
                       type="button"
                       onClick={() => removeTimeField(i)}
-                      className="text-xs font-semibold text-rose hover:underline"
+                      className="text-xs font-semibold text-rose hover:underline tap-link"
                     >
                       Remove
                     </button>
@@ -148,7 +148,7 @@ export default function MedicationsPage() {
           <button
             type="submit"
             disabled={saving}
-            className="btn-primary bg-amber text-navy-deep font-bold text-sm px-5 py-2.5 rounded-full hover:bg-amber-deep hover:text-ink transition-colors disabled:opacity-50"
+            className="btn-primary bg-amber text-navy-deep font-bold text-sm px-5 py-2.5 min-h-[44px] rounded-full hover:bg-amber-deep hover:text-ink transition-colors disabled:opacity-50"
           >
             {saving ? "Adding…" : "Add medication"}
           </button>
@@ -172,7 +172,7 @@ export default function MedicationsPage() {
                 </div>
                 <button
                   onClick={() => handleDelete(m.id)}
-                  className="text-xs font-semibold text-rose hover:underline"
+                  className="text-xs font-semibold text-rose hover:underline tap-link"
                 >
                   Remove
                 </button>

@@ -96,7 +96,7 @@ export default function QuotesPage() {
           <button
             type="submit"
             disabled={saving || !text.trim() || !author.trim()}
-            className="btn-primary bg-amber text-navy-deep font-bold text-sm px-5 py-2.5 rounded-full hover:bg-amber-deep hover:text-ink transition-colors disabled:opacity-50"
+            className="btn-primary bg-amber text-navy-deep font-bold text-sm px-5 py-2.5 min-h-[44px] rounded-full hover:bg-amber-deep hover:text-ink transition-colors disabled:opacity-50"
           >
             {saving ? "Adding…" : "Add quote"}
           </button>
@@ -119,7 +119,7 @@ export default function QuotesPage() {
               </div>
               <button
                 onClick={() => handleDelete(q.id)}
-                className="text-xs font-semibold text-rose hover:underline shrink-0"
+                className="text-xs font-semibold text-rose hover:underline tap-link shrink-0"
               >
                 Remove
               </button>

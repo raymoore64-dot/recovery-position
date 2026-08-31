@@ -88,7 +88,7 @@ function TrackGrid({ items, onDelete }: { items: Track[]; onDelete: (id: number)
                     <span className="font-semibold text-ink text-sm">{t.title}</span>
                     <button
                       onClick={() => onDelete(t.id)}
-                      className="text-xs font-semibold text-rose hover:underline shrink-0 ml-2"
+                      className="text-xs font-semibold text-rose hover:underline tap-link shrink-0 ml-2"
                     >
                       Remove
                     </button>
@@ -324,7 +324,7 @@ export default function AudioPage() {
               <button
                 type="submit"
                 disabled={saving || !title.trim() || !file}
-                className="btn-primary bg-amber text-navy-deep font-bold text-sm px-5 py-2.5 rounded-full hover:bg-amber-deep hover:text-ink transition-colors disabled:opacity-50"
+                className="btn-primary bg-amber text-navy-deep font-bold text-sm px-5 py-2.5 min-h-[44px] rounded-full hover:bg-amber-deep hover:text-ink transition-colors disabled:opacity-50"
               >
                 {saving ? "Uploading…" : "Upload track"}
               </button>

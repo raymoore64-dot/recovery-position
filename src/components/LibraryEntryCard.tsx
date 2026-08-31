@@ -53,15 +53,20 @@ export default function LibraryEntryCard({ entry, featured = false }: { entry: L
             role="checkbox"
             aria-checked={tried}
             title={tried ? "Tried it — click to un-mark" : "Mark as tried"}
-            className={`mt-0.5 shrink-0 w-4 h-4 rounded-full border flex items-center justify-center cursor-pointer transition-colors ${
-              tried ? "bg-sage border-sage" : "border-ink/30 hover:border-ink/60"
-            }`}
+            className="shrink-0 flex items-center justify-center cursor-pointer"
+            style={{ width: 44, height: 44, marginLeft: -12, marginTop: -12, marginBottom: -12 }}
           >
-            {tried && (
-              <svg width="9" height="9" viewBox="0 0 24 24" fill="none">
-                <path d="M4 12l6 6L20 6" stroke="#0d0808" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            )}
+            <span
+              className={`w-4 h-4 rounded-full border flex items-center justify-center transition-colors ${
+                tried ? "bg-sage border-sage" : "border-ink/30 hover:border-ink/60"
+              }`}
+            >
+              {tried && (
+                <svg width="9" height="9" viewBox="0 0 24 24" fill="none">
+                  <path d="M4 12l6 6L20 6" stroke="#0d0808" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              )}
+            </span>
           </span>
           <div className="min-w-0">
             <div className={`font-semibold text-sm ${tried ? "text-ink/60 line-through decoration-ink/30" : "text-ink"}`}>

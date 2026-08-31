@@ -89,7 +89,7 @@ export default function SharePage() {
           <button
             type="submit"
             disabled={saving}
-            className="btn-primary bg-amber text-navy-deep font-bold text-sm px-5 py-2.5 rounded-full hover:bg-amber-deep hover:text-ink transition-colors disabled:opacity-50 shrink-0"
+            className="btn-primary bg-amber text-navy-deep font-bold text-sm px-5 py-2.5 min-h-[44px] rounded-full hover:bg-amber-deep hover:text-ink transition-colors disabled:opacity-50 shrink-0"
           >
             {saving ? "Creating…" : "Create link"}
           </button>
@@ -119,7 +119,7 @@ export default function SharePage() {
                 </button>
                 <button
                   onClick={() => handleRevoke(link.id)}
-                  className="text-xs font-semibold text-rose hover:underline"
+                  className="text-xs font-semibold text-rose hover:underline tap-link"
                 >
                   Revoke
                 </button>

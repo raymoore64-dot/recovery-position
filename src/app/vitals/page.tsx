@@ -187,7 +187,7 @@ export default function VitalsPage() {
           <button
             type="submit"
             disabled={saving}
-            className="btn-primary bg-amber text-navy-deep font-bold text-sm px-5 py-2.5 rounded-full hover:bg-amber-deep hover:text-ink transition-colors disabled:opacity-50"
+            className="btn-primary bg-amber text-navy-deep font-bold text-sm px-5 py-2.5 min-h-[44px] rounded-full hover:bg-amber-deep hover:text-ink transition-colors disabled:opacity-50"
           >
             {saving ? "Saving…" : "Add entry"}
           </button>
@@ -216,7 +216,7 @@ export default function VitalsPage() {
                     )}
                     <button
                       onClick={() => handleDelete(v.id)}
-                      className="text-xs font-semibold text-rose hover:underline"
+                      className="text-xs font-semibold text-rose hover:underline tap-link"
                     >
                       Remove
                     </button>

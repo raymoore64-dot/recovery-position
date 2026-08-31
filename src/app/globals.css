@@ -106,6 +106,22 @@ body {
   pointer-events: none;
 }
 
+/* Guarantees a comfortable ~44px minimum tap target on small
+   text-styled action buttons (Remove, Revoke, Turn off, etc.) without
+   changing their visual size — the text stays small, but the actual
+   clickable area is padded out to a real finger-sized target. Standard
+   mobile accessibility guidance (Apple HIG / Android Material both
+   recommend 44-48px minimum). */
+.tap-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  margin-left: -0.5rem;
+  margin-right: -0.5rem;
+}
+
 /* Soft lift + glow on primary buttons — gradient-adjacent warmth even
    though most buttons stay solid orange for legibility. */
 .btn-primary {

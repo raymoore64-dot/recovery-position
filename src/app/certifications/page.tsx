@@ -164,7 +164,7 @@ export default function CertificationsPage() {
           <button
             type="submit"
             disabled={saving || !name.trim() || !expiryDate}
-            className="btn-primary bg-amber text-navy-deep font-bold text-sm px-5 py-2.5 rounded-full hover:bg-amber-deep hover:text-ink transition-colors disabled:opacity-50"
+            className="btn-primary bg-amber text-navy-deep font-bold text-sm px-5 py-2.5 min-h-[44px] rounded-full hover:bg-amber-deep hover:text-ink transition-colors disabled:opacity-50"
           >
             {saving ? "Adding…" : "Add certification"}
           </button>
@@ -191,7 +191,7 @@ export default function CertificationsPage() {
                 </span>
                 <button
                   onClick={() => handleDelete(cert.id)}
-                  className="text-xs font-semibold text-rose hover:underline"
+                  className="text-xs font-semibold text-rose hover:underline tap-link"
                 >
                   Remove
                 </button>

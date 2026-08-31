@@ -259,7 +259,7 @@ export default function RosterPage() {
       <div className="flex gap-2">
         <button
           onClick={() => setMode("single")}
-          className={`px-4 py-2 text-sm font-bold rounded-full transition-colors ${
+          className={`px-4 py-2 min-h-[44px] text-sm font-bold rounded-full transition-colors inline-flex items-center justify-center ${
             mode === "single" ? "bg-navy text-ink" : "bg-cream text-ink/60 hover:text-ink"
           }`}
         >
@@ -267,7 +267,7 @@ export default function RosterPage() {
         </button>
         <button
           onClick={() => setMode("batch")}
-          className={`px-4 py-2 text-sm font-bold rounded-full transition-colors ${
+          className={`px-4 py-2 min-h-[44px] text-sm font-bold rounded-full transition-colors inline-flex items-center justify-center ${
             mode === "batch" ? "bg-navy text-ink" : "bg-cream text-ink/60 hover:text-ink"
           }`}
         >
@@ -275,7 +275,7 @@ export default function RosterPage() {
         </button>
         <button
           onClick={() => setMode("scan")}
-          className={`px-4 py-2 text-sm font-bold rounded-full transition-colors ${
+          className={`px-4 py-2 min-h-[44px] text-sm font-bold rounded-full transition-colors inline-flex items-center justify-center ${
             mode === "scan" ? "bg-navy text-ink" : "bg-cream text-ink/60 hover:text-ink"
           }`}
         >
@@ -338,7 +338,7 @@ export default function RosterPage() {
           <button
             type="submit"
             disabled={saving}
-            className="btn-primary bg-amber text-navy-deep font-bold text-sm px-5 py-2.5 rounded-full hover:bg-amber-deep hover:text-ink transition-colors disabled:opacity-50"
+            className="btn-primary bg-amber text-navy-deep font-bold text-sm px-5 py-2.5 min-h-[44px] rounded-full hover:bg-amber-deep hover:text-ink transition-colors disabled:opacity-50"
           >
             {saving ? "Saving…" : "Save shift"}
           </button>
@@ -466,7 +466,7 @@ export default function RosterPage() {
               type="button"
               onClick={handleBatchSave}
               disabled={preview.length === 0 || batchSaving}
-              className="btn-primary bg-amber text-navy-deep font-bold text-sm px-5 py-2.5 rounded-full hover:bg-amber-deep hover:text-ink transition-colors disabled:opacity-50"
+              className="btn-primary bg-amber text-navy-deep font-bold text-sm px-5 py-2.5 min-h-[44px] rounded-full hover:bg-amber-deep hover:text-ink transition-colors disabled:opacity-50"
             >
               {batchSaving ? "Saving…" : `Save ${preview.length} shifts`}
             </button>
@@ -509,7 +509,7 @@ export default function RosterPage() {
             type="button"
             onClick={handleScan}
             disabled={!scanFile || scanning}
-            className="btn-primary bg-amber text-navy-deep font-bold text-sm px-5 py-2.5 rounded-full hover:bg-amber-deep hover:text-ink transition-colors disabled:opacity-50"
+            className="btn-primary bg-amber text-navy-deep font-bold text-sm px-5 py-2.5 min-h-[44px] rounded-full hover:bg-amber-deep hover:text-ink transition-colors disabled:opacity-50"
           >
             {scanning ? "Reading roster…" : "Scan roster"}
           </button>
@@ -575,7 +575,7 @@ export default function RosterPage() {
                   type="button"
                   onClick={handleScanSave}
                   disabled={scanSaving}
-                  className="btn-primary bg-amber text-navy-deep font-bold text-sm px-5 py-2.5 rounded-full hover:bg-amber-deep hover:text-ink transition-colors disabled:opacity-50"
+                  className="btn-primary bg-amber text-navy-deep font-bold text-sm px-5 py-2.5 min-h-[44px] rounded-full hover:bg-amber-deep hover:text-ink transition-colors disabled:opacity-50"
                 >
                   {scanSaving ? "Saving…" : `Save ${scannedShifts.length} shifts`}
                 </button>
@@ -608,7 +608,7 @@ export default function RosterPage() {
                 </div>
                 <button
                   onClick={() => handleDelete(s.date)}
-                  className="text-xs font-semibold text-rose hover:underline"
+                  className="text-xs font-semibold text-rose hover:underline tap-link"
                 >
                   Remove
                 </button>
