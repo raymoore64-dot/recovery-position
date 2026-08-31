@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Shift } from "@/lib/db";
 import { findLeaveCandidates, LeaveCandidate } from "@/lib/leave";
 import { toLocalISODate } from "@/lib/date";
@@ -91,6 +92,9 @@ export default function LeavePlannerPage() {
           ranks them by how much of it is genuine rest versus recovery from the shifts either
           side of it.
         </p>
+        <Link href="/travel" className="text-xs font-semibold text-amber-deep hover:underline mt-2 inline-block">
+          Flight or event during a shift block? Work out when to sleep →
+        </Link>
       </div>
 
       <div className="bg-cream rounded-2xl p-7 space-y-4 card-shadow">
