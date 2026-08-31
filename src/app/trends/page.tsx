@@ -48,6 +48,9 @@ export default function TrendsPage() {
           data for days nothing was entered. The more consistently you log, the more useful this
           gets.
         </p>
+        <Link href="/vitals" className="text-xs font-semibold text-amber-deep hover:underline mt-2 inline-block">
+          Also tracking vitals? →
+        </Link>
       </div>
 
       <div className="bg-cream rounded-2xl p-5 sm:p-7 card-shadow">

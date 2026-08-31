@@ -75,7 +75,18 @@ db.exec(`
 // so the safe pattern is: try to add it, ignore the error if it's already
 // there.
 try {
-  db.exec(`ALTER TABLE tracks ADD COLUMN source TEXT NOT NULL DEFAULT 'upload'`);
+  db.exec(`ALTER TABLE tracks ADD COLUMN source TEXT NOT NULL DEFAULT 'upload'
+  CREATE TABLE IF NOT EXISTS vitals (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    date TEXT NOT NULL,
+    systolic INTEGER,
+    diastolic INTEGER,
+    heart_rate INTEGER,
+    weight REAL,
+    notes TEXT,
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+`);
 } catch {
   // Column already exists — nothing to do.
 }
@@ -132,6 +143,17 @@ export interface Medication {
   id: number;
   name: string;
   times: string;
+  notes: string | null;
+  created_at: string;
+}
+
+export interface Vitals {
+  id: number;
+  date: string;
+  systolic: number | null;
+  diastolic: number | null;
+  heart_rate: number | null;
+  weight: number | null;
   notes: string | null;
   created_at: string;
 }
