@@ -9,6 +9,7 @@ interface MoreLink {
 }
 
 const LINKS: MoreLink[] = [
+  { href: "/how-it-works", title: "How This Works", blurb: "The handful of things that genuinely aren't obvious.", icon: "help" },
   { href: "/certifications", title: "Certifications", blurb: "Track renewals, get flagged before they lapse.", icon: "shield" },
   { href: "/trends", title: "Recovery Trend", blurb: "Your Recovery Score charted over the last 30 days.", icon: "chart" },
   { href: "/medications", title: "Medication Reminders", blurb: "Reminders at the times you set, on your schedule.", icon: "pill" },
@@ -23,6 +24,8 @@ function Icon({ name }: { name: string }): ReactNode {
   const common = { fill: "none" as const, stroke: "#F43F5E", strokeWidth: 1.8, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
   const size = 22;
   switch (name) {
+    case "help":
+      return <svg width={size} height={size} viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" {...common} /><path d="M9.5 9a2.5 2.5 0 0 1 4.8 1c0 1.5-2.3 1.8-2.3 3.5" {...common} /><circle cx="12" cy="17" r="0.6" fill="#F43F5E" stroke="none" /></svg>;
     case "shield":
       return <svg width={size} height={size} viewBox="0 0 24 24"><path d="M12 3.5 5 6v6c0 4.5 3 7.5 7 8.5 4-1 7-4 7-8.5V6l-7-2.5Z" {...common} /><path d="M9 12l2 2 4-4.5" {...common} /></svg>;
     case "chart":
