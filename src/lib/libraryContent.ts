@@ -1,5 +1,11 @@
 export type LibraryTag = "night" | "day" | "off" | "recovering" | "low-energy";
 
+export interface LibraryTool {
+  type: "timer";
+  minutes: number;
+  label: string;
+}
+
 export interface LibraryEntry {
   title: string;
   hook: string;
@@ -7,6 +13,7 @@ export interface LibraryEntry {
   why: string;
   bestFor: string;
   tags: LibraryTag[];
+  tool?: LibraryTool;
 }
 
 export interface LibraryCategory {
@@ -21,11 +28,11 @@ export const LIBRARY: LibraryCategory[] = [
     id: "sleep",
     label: "Sleep Techniques",
     intro:
-      "Beyond \"have an early night\" — actual techniques for sleeping when your body thinks it's the wrong time of day.",
+      "Beyond \"have an early night\" — which is the \"have you tried turning it off and on again\" of sleep advice. Actual techniques for when your body insists it's the wrong time of day.",
     entries: [
       {
         title: "Blackout properly, not approximately",
-        hook: "Curtains that let in a grey glow aren't blackout curtains.",
+        hook: "Curtains that let in a grey glow are called \"curtains,\" not \"blackout curtains.\" Your body notices the difference even if you don't.",
         how: [
           "Use blackout blinds or thick curtains with no gaps at the edges.",
           "No blinds? Tape aluminium foil over the window — cheap, ugly, extremely effective.",
@@ -37,7 +44,7 @@ export const LIBRARY: LibraryCategory[] = [
       },
       {
         title: "The 20-minute rule",
-        hook: "If you're not asleep after 20 minutes, get up — don't lie there getting frustrated.",
+        hook: "Lying there willing yourself to sleep has never once worked, for anyone, in the history of humanity. Try this instead.",
         how: [
           "If sleep hasn't come after roughly 20 minutes, get out of bed.",
           "Do something dull in low light — no phone, no bright rooms.",
@@ -46,10 +53,11 @@ export const LIBRARY: LibraryCategory[] = [
         why: "Lying awake and frustrated trains your brain to associate bed with wakefulness and stress — this is one of the core techniques used in CBT for insomnia.",
         bestFor: "Nights when your brain won't switch off",
         tags: ["night", "recovering"],
+        tool: { type: "timer", minutes: 20, label: "Give it 20 minutes" },
       },
       {
         title: "Wind-down that isn't your phone",
-        hook: "Scrolling feels like rest but keeps your brain switched on.",
+        hook: "Scrolling feels like rest. Your brain, tragically, disagrees.",
         how: [
           "Pick one low-stimulation activity for the 20–30 minutes before you try to sleep.",
           "A boring podcast, a paper book, or just sitting with a drink all work.",
@@ -61,7 +69,7 @@ export const LIBRARY: LibraryCategory[] = [
       },
       {
         title: "Consistent anchor sleep",
-        hook: "Even a rotating roster can have one stable point.",
+        hook: "Your roster is chaos. One small, stubborn island of consistency in it goes a long way.",
         how: [
           "Pick one block of your sleep — even just 4–5 hours — and try to keep it at the same clock time daily, rotation permitting.",
           "Let the rest of your sleep shift around your roster; the anchor block is what matters most.",
@@ -72,7 +80,7 @@ export const LIBRARY: LibraryCategory[] = [
       },
       {
         title: "Cool the room down, not just dark",
-        hook: "Daytime sleep fights your body's natural temperature rhythm.",
+        hook: "Daytime sleep is already an uphill battle. Don't also make your body do it in a sauna.",
         how: [
           "Aim a couple of degrees cooler than what feels normal for night sleep.",
           "A fan or AC timed to your sleep window helps more than most people expect.",
@@ -87,11 +95,11 @@ export const LIBRARY: LibraryCategory[] = [
     id: "relaxation",
     label: "Relaxation Methods From Around the World",
     intro:
-      "Different kinds of tired need different kinds of fixes. A few borrowed from places that have been doing shift work — or something like it — for a very long time.",
+      "Different kinds of tired need different kinds of fixes. A world tour of techniques from places that have been doing exhausting, unnatural things to their sleep schedules for centuries — sometimes on purpose.",
     entries: [
       {
         title: "Shinrin-yoku (Japan) — forest bathing",
-        hook: "Not a hike, not exercise — just slow, deliberate time outdoors.",
+        hook: "Not a hike. Not exercise. Just standing near a tree with intent.",
         how: [
           "Find any green space — a park is enough, it doesn't need to be a forest.",
           "Walk slowly, no destination, no phone.",
@@ -103,7 +111,7 @@ export const LIBRARY: LibraryCategory[] = [
       },
       {
         title: "Hygge (Denmark) — deliberate cosiness",
-        hook: "Denmark has some of the darkest winters in Europe and some of the highest wellbeing scores.",
+        hook: "Denmark has some of the darkest winters in Europe and somehow keeps winning happiness rankings. They know something.",
         how: [
           "Warm light instead of harsh overheads — a lamp, not the main light.",
           "Blankets, warm drinks, slow evenings — treat comfort as the point, not a consolation prize.",
@@ -114,7 +122,7 @@ export const LIBRARY: LibraryCategory[] = [
       },
       {
         title: "Onsen culture (Japan) — the hot soak as ritual",
-        hook: "Not just a bath — a deliberate boundary between one part of the day and the next.",
+        hook: "Not just a bath. A deliberate, unmissable full stop at the end of a sentence your shift wouldn't otherwise let you finish.",
         how: [
           "A proper soak, not a quick shower — 15–20 minutes if you can.",
           "Treat it as marking the end of \"on shift\", not just hygiene.",
@@ -122,10 +130,11 @@ export const LIBRARY: LibraryCategory[] = [
         why: "A deliberate transition ritual helps your brain register that one part of the day has genuinely ended — useful when shift work blurs every boundary between them.",
         bestFor: "Straight after a night shift, before sleep",
         tags: ["night"],
+        tool: { type: "timer", minutes: 15, label: "Soak timer" },
       },
       {
         title: "Siesta (Spain/Mediterranean) — permission to nap",
-        hook: "A short nap is culturally normal across the Mediterranean, not a sign of laziness.",
+        hook: "An entire coastline of Europe has agreed, for centuries, that napping is simply correct.",
         how: [
           "Keep it to 20 minutes, not two hours — set an alarm.",
           "Early-to-mid afternoon works best if your roster allows it.",
@@ -133,10 +142,11 @@ export const LIBRARY: LibraryCategory[] = [
         why: "A short nap avoids the deep sleep stages that leave you groggier than before — the difference between a nap that helps and one that wrecks the rest of your day.",
         bestFor: "A slow afternoon before a night shift",
         tags: ["night"],
+        tool: { type: "timer", minutes: 20, label: "Nap timer" },
       },
       {
         title: "Sisu (Finland) — quiet resilience, not forced positivity",
-        hook: "Getting through it without pretending it was fine is its own kind of strength.",
+        hook: "The Finns have a word for getting through something grim without pretending to enjoy it. Borrow it.",
         how: [
           "Don't perform being fine.",
           "Get through the hard shift without needing to feel good about it — steady is enough.",
@@ -151,11 +161,11 @@ export const LIBRARY: LibraryCategory[] = [
     id: "fitness",
     label: "Simple Fitness (No Gym Required)",
     intro:
-      "Movement that fits around a rota and doesn't need a gym membership, a class timetable, or main-character energy in leggings.",
+      "Movement that fits around a rota and doesn't require a gym membership, a class timetable, or main-character energy in leggings.",
     entries: [
       {
         title: "The 10-minute walk, non-negotiable",
-        hook: "The easiest thing on this whole list to actually keep doing long-term.",
+        hook: "The one thing on this entire list you have genuinely no excuse for.",
         how: [
           "Before or after a shift, outside if possible.",
           "No target pace, no distance goal — just movement and daylight.",
@@ -163,10 +173,11 @@ export const LIBRARY: LibraryCategory[] = [
         why: "Light exposure plus movement both help reset circadian timing — this is one of the highest-value, lowest-effort things you can do.",
         bestFor: "Every single shift, if you only do one thing",
         tags: ["night", "day", "off"],
+        tool: { type: "timer", minutes: 10, label: "Walk timer" },
       },
       {
         title: "Locker-room stretches",
-        hook: "Takes less time than checking your phone and undoes a lot of a 12-hour shift.",
+        hook: "Takes less time than checking your phone. Undoes more damage than a 12-hour shift did to your spine.",
         how: [
           "Calves, hamstrings, lower back, neck, shoulders.",
           "30 seconds each, before you even leave the building.",
@@ -174,10 +185,11 @@ export const LIBRARY: LibraryCategory[] = [
         why: "A long shift on your feet accumulates real muscular tension — a few minutes undoes a surprising amount of it.",
         bestFor: "Straight after any long shift",
         tags: ["night"],
+        tool: { type: "timer", minutes: 5, label: "Stretch timer" },
       },
       {
         title: "Bodyweight basics at home",
-        hook: "Ten minutes, no equipment, no drive to a gym.",
+        hook: "Ten minutes, no equipment, no drive, no membership fee, no excuse.",
         how: [
           "Squats, push-ups (wall push-ups count), a plank.",
           "Same simple routine each time — don't reinvent it when you're tired.",
@@ -188,7 +200,7 @@ export const LIBRARY: LibraryCategory[] = [
       },
       {
         title: "Stairs instead of the lift, deliberately",
-        hook: "An easy way to bank a bit of movement on a day when a proper workout isn't realistic.",
+        hook: "The lift will still be there tomorrow. Today, be difficult.",
         how: ["Just take them, especially on shift.", "Make it the default, not a decision every time."],
         why: "Small, unplanned movement adds up across a week in a way a single big workout doesn't replace.",
         bestFor: "Any shift, no extra time needed",
@@ -196,7 +208,7 @@ export const LIBRARY: LibraryCategory[] = [
       },
       {
         title: "Match the workout to the energy forecast",
-        hook: "Don't measure a Recovering day against what you could do on a good one.",
+        hook: "A Recovering day measured against a High-energy day is just a way to feel bad on purpose.",
         how: [
           "Save anything demanding for a High-energy day on the Daily Card.",
           "On a Recovering day, a walk is the win — full stop.",
@@ -211,11 +223,11 @@ export const LIBRARY: LibraryCategory[] = [
     id: "light",
     label: "Light & Screen Management",
     intro:
-      "Probably the single most powerful lever on this whole page. Light is the strongest signal your body clock responds to — most people never use it on purpose.",
+      "The single most powerful lever on this entire page, and the one almost nobody uses on purpose. Light runs your body clock whether you're paying attention or not.",
     entries: [
       {
         title: "Bright light early in your shift, dim light before sleep",
-        hook: "Light is the strongest signal your circadian clock responds to.",
+        hook: "Your circadian clock takes orders from light, not from your calendar. Use that.",
         how: [
           "Get bright light — daylight or a bright lamp — in the first couple of hours of a night shift, to help delay your body clock.",
           "Dim the lights at home in the hour before you plan to sleep, whatever time of day that is.",
@@ -226,7 +238,7 @@ export const LIBRARY: LibraryCategory[] = [
       },
       {
         title: "Wear sunglasses on the drive home after a night shift",
-        hook: "Morning sunlight on the way home tells your body exactly the wrong thing.",
+        hook: "Nothing sabotages a hard night's work quite like driving home and accidentally telling your brain it's time to wake up.",
         how: [
           "Put them on before you leave the building, not just when the sun feels bright.",
           "Wraparound styles block more of the peripheral light that still gets through.",
@@ -237,7 +249,7 @@ export const LIBRARY: LibraryCategory[] = [
       },
       {
         title: "Warm, dim lighting for the last hour before sleep",
-        hook: "The colour of light matters as much as the brightness.",
+        hook: "Blue light says \"it's go time.\" Amber light says \"we're done here.\" Choose your ending.",
         how: [
           "Switch off overhead lights; use a lamp instead.",
           "Smart bulbs on a warm/amber setting help more than brightness control alone.",
@@ -248,7 +260,7 @@ export const LIBRARY: LibraryCategory[] = [
       },
       {
         title: "A blue-light filter isn't a substitute for actually dimming down",
-        hook: "Night mode helps a little. It doesn't fix the real problem.",
+        hook: "Night mode is a participation trophy. The brightness and the scrolling are still winning.",
         how: [
           "Use night mode as a small help, not the whole solution.",
           "The real fix is turning things off or down, not just changing their colour.",
@@ -262,12 +274,11 @@ export const LIBRARY: LibraryCategory[] = [
   {
     id: "eating",
     label: "Eating on an Irregular Schedule",
-    intro:
-      "Digestion runs on its own circadian rhythm too — worth a bit of the same deliberate planning you'd give your sleep.",
+    intro: "Your stomach didn't get the memo about your roster either. It's still expecting a normal day.",
     entries: [
       {
         title: "Eat your main meal before a night shift, not during it",
-        hook: "Digestion follows a circadian rhythm too, not just sleep.",
+        hook: "Your gut is not built for a three-course meal at 2am, and it will let you know.",
         how: [
           "Have a proper meal in the few hours before you start a night shift.",
           "Keep what you eat during the shift lighter — snacks, something easy to digest.",
@@ -278,9 +289,9 @@ export const LIBRARY: LibraryCategory[] = [
       },
       {
         title: "Keep a consistent \"first meal\" time where you can",
-        hook: "Let the clock-time shift; keep the routine relative to your own wake-up.",
+        hook: "The clock time can do whatever it wants. Your own personal \"morning\" should stay put.",
         how: [
-          "Anchor your first meal after waking to a consistent point in your own day, whatever time that clock-time actually is.",
+          "Anchor your first meal after waking to a consistent point in your own day, whatever that clock-time actually is.",
         ],
         why: "A consistent eating pattern relative to your own schedule helps stabilise metabolism even when the actual clock time varies wildly.",
         bestFor: "Rotating rosters",
@@ -288,7 +299,7 @@ export const LIBRARY: LibraryCategory[] = [
       },
       {
         title: "Caffeine has a longer tail than it feels like",
-        hook: "Often the real cause of \"wired but exhausted.\"",
+        hook: "The gap between \"wired\" and \"exhausted\" is smaller than you think, and caffeine is usually the reason you're stuck in it.",
         how: [
           "Work back from your planned sleep time and stop roughly 8 hours before.",
           "Check the Daily Card's caffeine cutoff — it's already calculated for today's shift.",
@@ -299,7 +310,7 @@ export const LIBRARY: LibraryCategory[] = [
       },
       {
         title: "Hydrate deliberately, not just when thirsty",
-        hook: "Easy to let slip during a busy 12-hour shift.",
+        hook: "By the time you're actually thirsty on a 12-hour shift, you're already behind.",
         how: [
           "Keep water visibly nearby — out of sight often means out of mind on nights.",
           "If disrupted sleep from bathroom trips is an issue, taper (don't eliminate) fluids in the last hour before bed.",
@@ -313,12 +324,11 @@ export const LIBRARY: LibraryCategory[] = [
   {
     id: "connection",
     label: "Staying Connected",
-    intro:
-      "Shift work's real social cost is usually quiet erosion, not one big missed event. Worth protecting on purpose.",
+    intro: "Nobody dramatically dumps a shift worker. They just quietly stop inviting you. Worth noticing before it happens.",
     entries: [
       {
         title: "Protect one recurring commitment, even a small one",
-        hook: "Consistency matters more than frequency.",
+        hook: "One small, unmissable thing beats a dozen good intentions you keep cancelling.",
         how: [
           "Pick one regular thing — a weekly call, a standing coffee, a school pickup — and defend it against the roster where you can.",
         ],
@@ -328,7 +338,7 @@ export const LIBRARY: LibraryCategory[] = [
       },
       {
         title: "Tell people your actual pattern, not just \"I work shifts\"",
-        hook: "Being specific removes the guesswork that leads to fewer invitations.",
+        hook: "\"I work shifts\" tells people nothing. It just sounds like a polite way of saying no forever.",
         how: [
           "Share your actual roster with the people closest to you, not just a vague \"I'm on shifts.\"",
         ],
@@ -338,7 +348,7 @@ export const LIBRARY: LibraryCategory[] = [
       },
       {
         title: "Use your best day, not just your day off",
-        hook: "A day off right after three nights is recovery, not really free time.",
+        hook: "Not all days off are created equal, and treating them like they are is how good days off go to waste on laundry.",
         how: [
           "Check the Daily Card's \"Best day\" flag rather than defaulting to the first day off in the week.",
           "Save a later, genuinely-rested day off for people, not chores.",
@@ -349,7 +359,7 @@ export const LIBRARY: LibraryCategory[] = [
       },
       {
         title: "Isolation compounds — notice it earlier, not later",
-        hook: "Even one small social contact a week measurably helps.",
+        hook: "It rarely feels like isolation while it's happening. It just feels like being tired and having plans fall through, repeatedly.",
         how: [
           "If weeks have gone by without seeing anyone outside work, treat that as a signal, not just a busy patch.",
         ],
@@ -361,8 +371,6 @@ export const LIBRARY: LibraryCategory[] = [
   },
 ];
 
-/** Simple deterministic hash — same pattern used for quips/audio picks, so
- * the featured entry stays stable across refreshes but varies day to day. */
 function hashString(s: string): number {
   let h = 0;
   for (let i = 0; i < s.length; i++) {
@@ -378,10 +386,6 @@ export interface FeaturedEntry {
   entry: LibraryEntry;
 }
 
-/** Picks one entry across the whole library whose tags match today's
- * context, stable for the given date. Falls back to any entry tagged
- * "off" if nothing matches (shouldn't normally happen, since "off" and
- * "night"/"day" together cover every DayPlan state). */
 export function featuredFor(contextTags: LibraryTag[], seed: string): FeaturedEntry | null {
   const candidates: FeaturedEntry[] = [];
   for (const cat of LIBRARY) {
@@ -393,4 +397,17 @@ export function featuredFor(contextTags: LibraryTag[], seed: string): FeaturedEn
   }
   if (candidates.length === 0) return null;
   return candidates[hashString(seed) % candidates.length];
+}
+
+/** All entries flattened with their category, for the "Surprise me"
+ * shuffle — genuinely random each click, not date-seeded, since the whole
+ * point is spontaneity rather than stability. */
+export function allEntriesFlat(): FeaturedEntry[] {
+  const out: FeaturedEntry[] = [];
+  for (const cat of LIBRARY) {
+    for (const entry of cat.entries) {
+      out.push({ categoryId: cat.id, categoryLabel: cat.label, entry });
+    }
+  }
+  return out;
 }
