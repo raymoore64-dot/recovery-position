@@ -1,0 +1,24 @@
+{
+  "name": "The Recovery Position",
+  "short_name": "Recovery",
+  "description": "Your roster runs your life. Might as well let it run something useful too.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#100b0c",
+  "theme_color": "#1b1315",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
