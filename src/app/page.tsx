@@ -5,9 +5,11 @@ import { categoryFor, pickTrack, CATEGORY_LABEL } from "@/lib/audio";
 import { toLocalISODate } from "@/lib/date";
 import { statusFor } from "@/lib/certifications";
 import { pickDailyQuote } from "@/lib/quotes";
+import { notificationTimesFor } from "@/lib/notificationTimes";
 import Link from "next/link";
 import Image from "next/image";
 import RecoveryDial from "@/components/RecoveryDial";
+import NotificationSetup from "@/components/NotificationSetup";
 
 // This page reads live data (today's date, current shifts) on every
 // request, so it must never be statically prerendered at build time.
@@ -85,6 +87,8 @@ export default function Home() {
 
   const personalQuotes = db.prepare("SELECT * FROM personal_quotes").all() as PersonalQuote[];
   const dailyQuote = pickDailyQuote(personalQuotes, todayPlan.date);
+
+  const notifTimes = todayPlan.shift ? notificationTimesFor(todayPlan.shift) : { sleepWindowStart: null, caffeineCutoff: null };
 
   return (
     <div className="space-y-12">
@@ -210,6 +214,11 @@ export default function Home() {
             survived and counting.
           </p>
         )}
+
+        <NotificationSetup
+          sleepWindowStart={notifTimes.sleepWindowStart ? notifTimes.sleepWindowStart.toISOString() : null}
+          caffeineCutoff={notifTimes.caffeineCutoff ? notifTimes.caffeineCutoff.toISOString() : null}
+        />
 
         {suggestedTrack && (
           <div className="mt-4 bg-cream rounded-xl p-4 card-shadow flex items-center justify-between gap-4 flex-wrap">

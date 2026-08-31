@@ -28,11 +28,7 @@ export default function ExportPage() {
           This downloads immediately — nothing is sent anywhere, it comes straight from your own
           local database to a file on your machine.
         </p>
-        
-          href="/api/export"
-          download
-          className="btn-primary inline-block bg-amber text-navy-deep font-bold text-sm px-5 py-2.5 rounded-full hover:bg-amber-deep hover:text-ink transition-colors"
-        >
+        <a href="/api/export" download className="btn-primary inline-block bg-amber text-navy-deep font-bold text-sm px-5 py-2.5 rounded-full hover:bg-amber-deep hover:text-ink transition-colors">
           Download my data
         </a>
       </div>
