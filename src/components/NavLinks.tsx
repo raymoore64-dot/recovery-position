@@ -8,8 +8,8 @@ const LINKS = [
   { href: "/roster", label: "Roster" },
   { href: "/leave", label: "Leave" },
   { href: "/audio", label: "Afterglow" },
-  { href: "/certifications", label: "Certs" },
   { href: "/library", label: "Library" },
+  { href: "/more", label: "More" },
 ];
 
 export default function NavLinks() {

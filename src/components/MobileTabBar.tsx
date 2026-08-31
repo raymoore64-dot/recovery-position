@@ -8,8 +8,8 @@ const TABS = [
   { href: "/roster", label: "Roster", icon: "calendar" },
   { href: "/leave", label: "Leave", icon: "plane" },
   { href: "/audio", label: "Afterglow", icon: "music" },
-  { href: "/certifications", label: "Certs", icon: "shield" },
   { href: "/library", label: "Library", icon: "book" },
+  { href: "/more", label: "More", icon: "more" },
 ] as const;
 
 function TabIcon({ name, active }: { name: string; active: boolean }) {
@@ -45,6 +45,13 @@ function TabIcon({ name, active }: { name: string; active: boolean }) {
           <path d="M9.4 18V6.8L19.4 4.8V16" {...common} />
         </svg>
       );
+    case "book":
+      return (
+        <svg width="20" height="20" viewBox="0 0 24 24">
+          <path d="M12 6.5c-2-1.6-5-2-8-1.3v13c3 0 6 .5 8 2 2-1.5 5-2 8-2v-13c-3-.7-6-.3-8 1.3Z" {...common} />
+          <path d="M12 6.5v13" {...common} />
+        </svg>
+      );
     case "shield":
       return (
         <svg width="20" height="20" viewBox="0 0 24 24">
@@ -52,11 +59,12 @@ function TabIcon({ name, active }: { name: string; active: boolean }) {
           <path d="M9 12l2 2 4-4.5" {...common} />
         </svg>
       );
-    case "book":
+    case "more":
       return (
         <svg width="20" height="20" viewBox="0 0 24 24">
-          <path d="M12 6.5c-2-1.6-5-2-8-1.3v13c3 0 6 .5 8 2 2-1.5 5-2 8-2v-13c-3-.7-6-.3-8 1.3Z" {...common} />
-          <path d="M12 6.5v13" {...common} />
+          <circle cx="5" cy="12" r="1.6" fill={stroke} stroke="none" />
+          <circle cx="12" cy="12" r="1.6" fill={stroke} stroke="none" />
+          <circle cx="19" cy="12" r="1.6" fill={stroke} stroke="none" />
         </svg>
       );
     default:
