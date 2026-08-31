@@ -291,12 +291,17 @@ export default function Home() {
       </section>
 
       <section>
-        <h2
-          style={{ fontFamily: "var(--font-display)" }}
-          className="text-2xl text-ink mb-4 tracking-tight"
-        >
-          The next 7 days
-        </h2>
+        <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+          <h2
+            style={{ fontFamily: "var(--font-display)" }}
+            className="text-2xl text-ink tracking-tight"
+          >
+            The next 7 days
+          </h2>
+          <Link href="/trends" className="text-xs font-semibold text-amber-deep hover:underline">
+            View recovery trend →
+          </Link>
+        </div>
         <div className="space-y-2">
           {plans.map((p) => {
             const d = new Date(p.date + "T00:00:00");
