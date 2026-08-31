@@ -8,6 +8,7 @@ const LINKS = [
   { href: "/roster", label: "Roster" },
   { href: "/leave", label: "Leave" },
   { href: "/audio", label: "Afterglow" },
+  { href: "/certifications", label: "Certs" },
   { href: "/library", label: "Library" },
 ];
 
@@ -15,7 +16,7 @@ export default function NavLinks() {
   const pathname = usePathname();
 
   return (
-    <nav className="flex gap-1 text-sm font-semibold">
+    <nav className="hidden sm:flex gap-1 text-sm font-semibold">
       {LINKS.map((link) => {
         const active = pathname === link.href;
         return (

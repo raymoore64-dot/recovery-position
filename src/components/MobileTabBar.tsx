@@ -8,6 +8,7 @@ const TABS = [
   { href: "/roster", label: "Roster", icon: "calendar" },
   { href: "/leave", label: "Leave", icon: "plane" },
   { href: "/audio", label: "Afterglow", icon: "music" },
+  { href: "/certifications", label: "Certs", icon: "shield" },
   { href: "/library", label: "Library", icon: "book" },
 ] as const;
 
@@ -42,6 +43,13 @@ function TabIcon({ name, active }: { name: string; active: boolean }) {
           <circle cx="7" cy="18" r="2.4" {...common} />
           <circle cx="17" cy="16" r="2.4" {...common} />
           <path d="M9.4 18V6.8L19.4 4.8V16" {...common} />
+        </svg>
+      );
+    case "shield":
+      return (
+        <svg width="20" height="20" viewBox="0 0 24 24">
+          <path d="M12 3.5 5 6v6c0 4.5 3 7.5 7 8.5 4-1 7-4 7-8.5V6l-7-2.5Z" {...common} />
+          <path d="M9 12l2 2 4-4.5" {...common} />
         </svg>
       );
     case "book":

@@ -1,8 +1,10 @@
-import db, { Shift, Track } from "@/lib/db";
+import db, { Shift, Track, Certification, PersonalQuote } from "@/lib/db";
 import { buildPlan, shiftLabel, DayPlan } from "@/lib/schedule";
 import { quipFor } from "@/lib/quips";
 import { categoryFor, pickTrack, CATEGORY_LABEL } from "@/lib/audio";
 import { toLocalISODate } from "@/lib/date";
+import { statusFor } from "@/lib/certifications";
+import { pickDailyQuote } from "@/lib/quotes";
 import Link from "next/link";
 import Image from "next/image";
 import RecoveryDial from "@/components/RecoveryDial";
@@ -74,6 +76,15 @@ export default function Home() {
   const suggestedTrack = suggestedCategory
     ? pickTrack(allTracks, suggestedCategory, todayPlan.date)
     : null;
+
+  const allCerts = db.prepare("SELECT * FROM certifications").all() as Certification[];
+  const dueCerts = allCerts
+    .map((c) => ({ cert: c, info: statusFor(c.expiry_date, todayPlan.date) }))
+    .filter(({ info }) => info.status !== "fine")
+    .sort((a, b) => a.info.daysUntil - b.info.daysUntil);
+
+  const personalQuotes = db.prepare("SELECT * FROM personal_quotes").all() as PersonalQuote[];
+  const dailyQuote = pickDailyQuote(personalQuotes, todayPlan.date);
 
   return (
     <div className="space-y-12">
@@ -214,6 +225,39 @@ export default function Home() {
             </audio>
           </div>
         )}
+
+        {dueCerts.length > 0 && (
+          <Link
+            href="/certifications"
+            className="mt-4 block bg-cream rounded-xl p-4 card-shadow hover:bg-navy-mid transition-colors"
+          >
+            <div className="text-xs font-bold uppercase tracking-wide text-rose mb-1">
+              {dueCerts.some((d) => d.info.status === "overdue") ? "Overdue" : "Due soon"}
+            </div>
+            <div className="text-sm text-ink">
+              {dueCerts.slice(0, 2).map(({ cert, info }) => (
+                <span key={cert.id} className="block">
+                  {cert.name} — {info.label}
+                </span>
+              ))}
+              {dueCerts.length > 2 && (
+                <span className="text-ink/50">and {dueCerts.length - 2} more…</span>
+              )}
+            </div>
+          </Link>
+        )}
+
+        <div className="mt-4 bg-cream rounded-xl p-5 card-shadow text-center">
+          <p style={{ fontFamily: "var(--font-display-italic)" }} className="text-ink text-base">
+            &ldquo;{dailyQuote.text}&rdquo;
+          </p>
+          <p className="text-xs text-ink/50 mt-2">
+            — {dailyQuote.author} &middot;{" "}
+            <Link href="/quotes" className="text-amber-deep hover:underline">
+              add your own
+            </Link>
+          </p>
+        </div>
       </section>
 
       <section>
