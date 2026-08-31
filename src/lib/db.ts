@@ -43,6 +43,13 @@ db.exec(`
     notes TEXT,
     created_at TEXT NOT NULL DEFAULT (datetime('now'))
   );
+
+  CREATE TABLE IF NOT EXISTS personal_quotes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    text TEXT NOT NULL,
+    author TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+  );
 `);
 
 // Migration: "source" distinguishes curated tracks (yours) from tracks
@@ -89,5 +96,12 @@ export interface Certification {
   name: string;
   expiry_date: string;
   notes: string | null;
+  created_at: string;
+}
+
+export interface PersonalQuote {
+  id: number;
+  text: string;
+  author: string;
   created_at: string;
 }
