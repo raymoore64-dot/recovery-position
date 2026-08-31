@@ -6,6 +6,7 @@ import { toLocalISODate } from "@/lib/date";
 import { statusFor } from "@/lib/certifications";
 import { pickDailyQuote } from "@/lib/quotes";
 import { notificationTimesFor } from "@/lib/notificationTimes";
+import { resolveActiveShiftDate } from "@/lib/activeShift";
 import Link from "next/link";
 import Image from "next/image";
 import RecoveryDial from "@/components/RecoveryDial";
@@ -19,31 +20,50 @@ function isoDate(d: Date): string {
   return toLocalISODate(d);
 }
 
-function loadWeekPlan(): DayPlan[] {
-  const today = new Date();
-  const start = new Date(today);
-  start.setDate(start.getDate() - 1); // one day back, so "yesterday" lookups work
-  const end = new Date(today);
-  end.setDate(end.getDate() + 6); // today + next 6 days
+/**
+ * Loads everything the Daily Card needs. Two distinct concepts here,
+ * which is the whole point of this function:
+ *
+ * - `heroPlan` is whichever shift is operatively "active" right now —
+ *   for most of the day that's today's own shift, but if it's the
+ *   morning after a night shift and you're still inside the recovery
+ *   window, it's still last night's shift. This drives the hero card.
+ * - `listPlans` is the plain 7-day-forward calendar list, always
+ *   anchored to the real date regardless of the above.
+ * - `realTodayISO` is the actual calendar date, used for the header
+ *   label and anything (like certification countdowns) that must count
+ *   relative to the real "now", not the operative shift date.
+ */
+function loadDashboardData(): { heroPlan: DayPlan; listPlans: DayPlan[]; realTodayISO: string } {
+  const now = new Date();
+  const realTodayISO = isoDate(now);
+
+  const rangeStart = new Date(now);
+  rangeStart.setDate(rangeStart.getDate() - 2);
+  const rangeEnd = new Date(now);
+  rangeEnd.setDate(rangeEnd.getDate() + 6);
 
   const rows = db
     .prepare("SELECT * FROM shifts WHERE date BETWEEN ? AND ? ORDER BY date ASC")
-    .all(isoDate(start), isoDate(end)) as Shift[];
+    .all(isoDate(rangeStart), isoDate(rangeEnd)) as Shift[];
+  const shiftsByDate = new Map(rows.map((r) => [r.date, r]));
 
-  const byDate = new Map(rows.map((r) => [r.date, r]));
+  const effectiveDate = resolveActiveShiftDate(realTodayISO, shiftsByDate, now);
+  const effectiveYesterday = isoDate(new Date(new Date(`${effectiveDate}T00:00:00`).getTime() - 86400000));
+  const heroPlans = buildPlan([effectiveYesterday, effectiveDate], shiftsByDate);
+  const heroPlan = heroPlans[1];
 
-  const dates: string[] = [];
-  const cursor = new Date(today);
+  const listDates: string[] = [];
+  const cursor = new Date(now);
   for (let i = 0; i < 7; i++) {
-    dates.push(isoDate(cursor));
+    listDates.push(isoDate(cursor));
     cursor.setDate(cursor.getDate() + 1);
   }
+  const listYesterday = isoDate(new Date(new Date(`${realTodayISO}T00:00:00`).getTime() - 86400000));
+  const allListPlans = buildPlan([listYesterday, ...listDates], shiftsByDate);
+  const listPlans = allListPlans.slice(1);
 
-  // Prepend yesterday to the lookup range so energy/consecutive-night
-  // calculations for "today" have context, but only return today onward.
-  const allDates = [isoDate(start), ...dates];
-  const allPlans = buildPlan(allDates, byDate);
-  return allPlans.slice(1);
+  return { heroPlan, listPlans, realTodayISO };
 }
 
 /** Total night shifts ever logged up to and including today — a small,
@@ -64,10 +84,11 @@ const energyColor: Record<DayPlan["energy"], string> = {
 };
 
 export default function Home() {
-  const plans = loadWeekPlan();
-  const todayPlan = plans[0];
+  const { heroPlan, listPlans, realTodayISO } = loadDashboardData();
+  const todayPlan = heroPlan;
+  const plans = listPlans;
   const nightsSurvived = loadNightsSurvived();
-  const weekday = new Date(todayPlan.date + "T00:00:00").toLocaleDateString("en-GB", {
+  const weekday = new Date(realTodayISO + "T00:00:00").toLocaleDateString("en-GB", {
     weekday: "long",
     day: "numeric",
     month: "long",
@@ -81,7 +102,7 @@ export default function Home() {
 
   const allCerts = db.prepare("SELECT * FROM certifications").all() as Certification[];
   const dueCerts = allCerts
-    .map((c) => ({ cert: c, info: statusFor(c.expiry_date, todayPlan.date) }))
+    .map((c) => ({ cert: c, info: statusFor(c.expiry_date, realTodayISO) }))
     .filter(({ info }) => info.status !== "fine")
     .sort((a, b) => a.info.daysUntil - b.info.daysUntil);
 
