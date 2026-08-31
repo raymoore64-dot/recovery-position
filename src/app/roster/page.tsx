@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { toLocalISODate } from "@/lib/date";
 
 type ShiftType = "day" | "night" | "long_day" | "off";
@@ -616,6 +617,10 @@ export default function RosterPage() {
           </div>
         )}
       </div>
+
+      <Link href="/export" className="text-xs font-semibold text-amber-deep hover:underline block pt-2">
+        Download all your data →
+      </Link>
     </div>
   );
 }
