@@ -62,6 +62,7 @@ export default function RosterPage() {
   const [shiftType, setShiftType] = useState<ShiftType>("day");
   const [startTime, setStartTime] = useState(SHIFT_PRESETS.day.start);
   const [endTime, setEndTime] = useState(SHIFT_PRESETS.day.end);
+  const [notes, setNotes] = useState("");
   const [saving, setSaving] = useState(false);
 
   // --- batch pattern state ---
@@ -111,8 +112,10 @@ export default function RosterPage() {
         shift_type: shiftType,
         start_time: shiftType === "off" ? null : startTime,
         end_time: shiftType === "off" ? null : endTime,
+        notes: notes.trim() || null,
       }),
     });
+    setNotes("");
     setSaving(false);
     await load();
   }
@@ -334,6 +337,19 @@ export default function RosterPage() {
               </label>
             </div>
           )}
+
+          <label className="block">
+            <span className="text-xs font-semibold text-ink uppercase tracking-wide">
+              Note (optional)
+            </span>
+            <input
+              type="text"
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              placeholder="e.g. Follow up on X tomorrow, car's in the other car park"
+              className="mt-1 w-full rounded-md border border-line bg-paper px-3 py-2 text-sm"
+            />
+          </label>
 
           <button
             type="submit"
@@ -602,9 +618,12 @@ export default function RosterPage() {
                 className="flex items-center justify-between bg-cream rounded-xl px-4 py-3.5 text-sm card-shadow"
               >
                 <div className="font-semibold text-ink w-32">{s.date}</div>
-                <div className="flex-1 text-ink/80 capitalize">
-                  {s.shift_type.replace("_", " ")}
-                  {s.start_time && s.end_time ? ` — ${s.start_time}–${s.end_time}` : ""}
+                <div className="flex-1">
+                  <div className="text-ink/80 capitalize">
+                    {s.shift_type.replace("_", " ")}
+                    {s.start_time && s.end_time ? ` — ${s.start_time}–${s.end_time}` : ""}
+                  </div>
+                  {s.notes && <div className="text-xs text-ink/50 mt-0.5">{s.notes}</div>}
                 </div>
                 <button
                   onClick={() => handleDelete(s.date)}

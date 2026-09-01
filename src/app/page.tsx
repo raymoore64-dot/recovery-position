@@ -230,6 +230,12 @@ export default function Home() {
                   {quipFor(todayPlan)}
                 </p>
 
+                {todayPlan.shift.notes && (
+                  <div className="bg-white/5 rounded-lg px-3 py-2 mb-4 text-sm text-ink/80">
+                    📝 {todayPlan.shift.notes}
+                  </div>
+                )}
+
                 <div className="grid grid-cols-2 gap-4 sm:gap-6 text-sm">
                   <div className="border-t border-paper/15 pt-3">
                     <div className="text-ink/60 text-xs uppercase tracking-widest mb-1 font-semibold">
