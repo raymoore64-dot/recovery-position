@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { parseRosterImage } from "@/lib/parseRoster";
 import { todayLocalISO } from "@/lib/date";
 
+
+// This route reads/writes live data on every request and must never
+// be cached or statically optimized by Next.js.
+export const dynamic = "force-dynamic";
 export async function POST(req: NextRequest) {
   const formData = await req.formData();
   const file = formData.get("image") as File | null;

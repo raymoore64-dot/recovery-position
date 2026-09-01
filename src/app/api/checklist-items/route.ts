@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import db, { ChecklistItem } from "@/lib/db";
 
+
+// This route reads/writes live data on every request and must never
+// be cached or statically optimized by Next.js.
+export const dynamic = "force-dynamic";
 export async function GET() {
   const rows = db.prepare("SELECT * FROM checklist_items ORDER BY id ASC").all() as ChecklistItem[];
   return NextResponse.json(rows);

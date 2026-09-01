@@ -4,6 +4,10 @@ import { checkOvertimeCandidate } from "@/lib/overtimeCheck";
 import { buildTrend, trendStats } from "@/lib/trends";
 import { toLocalISODate } from "@/lib/date";
 
+
+// This route reads/writes live data on every request and must never
+// be cached or statically optimized by Next.js.
+export const dynamic = "force-dynamic";
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const date = searchParams.get("date");

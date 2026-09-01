@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import db, { Shift } from "@/lib/db";
 
+
+// This route reads/writes live data on every request and must never
+// be cached or statically optimized by Next.js.
+export const dynamic = "force-dynamic";
 // GET /api/shifts?from=2026-08-01&to=2026-08-31
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);

@@ -2,6 +2,10 @@ import { NextResponse } from "next/server";
 import db from "@/lib/db";
 import { toLocalISODate } from "@/lib/date";
 
+
+// This route reads/writes live data on every request and must never
+// be cached or statically optimized by Next.js.
+export const dynamic = "force-dynamic";
 // Everything a person might reasonably want out of the app if they're
 // switching machines, backing up before an update, or just want their
 // own data in a plain, readable format. New tables should be added here

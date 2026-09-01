@@ -3,6 +3,10 @@ import db from "@/lib/db";
 import path from "path";
 import fs from "fs";
 
+
+// This route reads/writes live data on every request and must never
+// be cached or statically optimized by Next.js.
+export const dynamic = "force-dynamic";
 const AUDIO_DIR = path.join(process.cwd(), "public", "audio");
 const ALLOWED_EXTENSIONS = [".mp3", ".m4a", ".wav", ".ogg", ".aac", ".flac"];
 

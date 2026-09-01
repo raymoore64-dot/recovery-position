@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "@/lib/db";
 
+
+// This route reads/writes live data on every request and must never
+// be cached or statically optimized by Next.js.
+export const dynamic = "force-dynamic";
 interface BatchShift {
   date: string;
   shift_type: string;

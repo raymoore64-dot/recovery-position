@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import db, { PersonalQuote } from "@/lib/db";
 
+
+// This route reads/writes live data on every request and must never
+// be cached or statically optimized by Next.js.
+export const dynamic = "force-dynamic";
 export async function GET() {
   const rows = db
     .prepare("SELECT * FROM personal_quotes ORDER BY created_at DESC")
