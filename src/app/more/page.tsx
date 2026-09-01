@@ -15,6 +15,7 @@ const LINKS: MoreLink[] = [
   { href: "/year-in-review", title: "Year in Review", blurb: "Every shift, every streak, all-time.", icon: "star" },
   { href: "/medications", title: "Medication Reminders", blurb: "Reminders at the times you set, on your schedule.", icon: "pill" },
   { href: "/checklist", title: "Pre-Shift Checklist", blurb: "Never leave without badge, keys, or ID again.", icon: "check" },
+  { href: "/overtime-check", title: "Overtime Check", blurb: "Real facts before you say yes to an extra shift.", icon: "scale" },
   { href: "/vitals", title: "Vitals Diary", blurb: "Your own numbers, logged with shift context.", icon: "heart" },
   { href: "/quotes", title: "Your Quotes", blurb: "Add your own daily quotes alongside the built-in ones.", icon: "quote" },
   { href: "/travel", title: "Travel & Events", blurb: "Work out when to sleep before a flight or early start.", icon: "plane" },
@@ -38,6 +39,8 @@ function Icon({ name }: { name: string }): ReactNode {
       return <svg width={size} height={size} viewBox="0 0 24 24"><rect x="4" y="9" width="16" height="7" rx="3.5" transform="rotate(-30 12 12)" {...common} /><path d="M12 8l-2.5 8" {...common} /></svg>;
     case "check":
       return <svg width={size} height={size} viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4" {...common} /><path d="M8 12l3 3 5-6" {...common} /></svg>;
+    case "scale":
+      return <svg width={size} height={size} viewBox="0 0 24 24"><path d="M12 3v18M7 7h10M5 7l-3 6a3 3 0 0 0 6 0l-3-6Zm14 0l-3 6a3 3 0 0 0 6 0l-3-6Z" {...common} /></svg>;
     case "heart":
       return <svg width={size} height={size} viewBox="0 0 24 24"><path d="M12 20s-7-4.5-9-9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c-2 4.5-9 9-9 9Z" {...common} /></svg>;
     case "quote":
