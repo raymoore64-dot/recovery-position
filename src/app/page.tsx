@@ -11,6 +11,7 @@ import Link from "next/link";
 import Image from "next/image";
 import RecoveryDial from "@/components/RecoveryDial";
 import NotificationSetup, { ReminderItem } from "@/components/NotificationSetup";
+import MilestoneCelebration from "@/components/MilestoneCelebration";
 
 // This page reads live data (today's date, current shifts) on every
 // request, so it must never be statically prerendered at build time.
@@ -146,6 +147,7 @@ export default function Home() {
 
   return (
     <div className="space-y-12">
+      <MilestoneCelebration nightsSurvived={nightsSurvived} />
       <div className="flex items-center gap-3 sm:gap-4">
         <Image src="/icon.svg" alt="" width={52} height={52} className="shrink-0 sm:w-16 sm:h-16" />
         <div>
