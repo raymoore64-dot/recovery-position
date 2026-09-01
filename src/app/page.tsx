@@ -6,6 +6,7 @@ import { toLocalISODate } from "@/lib/date";
 import { statusFor } from "@/lib/certifications";
 import { pickDailyQuote } from "@/lib/quotes";
 import { notificationTimesFor } from "@/lib/notificationTimes";
+import { driveSafetyWindowFor } from "@/lib/driveSafety";
 import { resolveActiveShiftDate } from "@/lib/activeShift";
 import Link from "next/link";
 import Image from "next/image";
@@ -13,6 +14,8 @@ import RecoveryDial from "@/components/RecoveryDial";
 import NotificationSetup, { ReminderItem } from "@/components/NotificationSetup";
 import MilestoneCelebration from "@/components/MilestoneCelebration";
 import LogoEasterEgg from "@/components/LogoEasterEgg";
+import DriveSafetyCheck from "@/components/DriveSafetyCheck";
+import PreShiftChecklist from "@/components/PreShiftChecklist";
 
 // This page reads live data (today's date, current shifts) on every
 // request, so it must never be statically prerendered at build time.
@@ -146,6 +149,16 @@ export default function Home() {
     }
   }
 
+  const driveSafetyWindow = todayPlan.shift ? driveSafetyWindowFor(todayPlan.shift) : null;
+  if (driveSafetyWindow) {
+    reminders.push({
+      id: "drive-safety",
+      label: "Driving home?",
+      body: "Quick check before you go — are you actually alert enough to drive?",
+      time: driveSafetyWindow.start.toISOString(),
+    });
+  }
+
   return (
     <div className="space-y-12">
       <MilestoneCelebration nightsSurvived={nightsSurvived} />
@@ -273,6 +286,12 @@ export default function Home() {
         )}
 
         <NotificationSetup reminders={reminders} />
+
+        <DriveSafetyCheck shift={todayPlan.shift} />
+
+        {todayPlan.shift && todayPlan.shift.shift_type !== "off" && (
+          <PreShiftChecklist date={todayPlan.date} />
+        )}
 
         {suggestedTrack && (
           <div className="mt-4 bg-cream rounded-xl p-4 card-shadow flex items-center justify-between gap-4 flex-wrap">

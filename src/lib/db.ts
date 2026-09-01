@@ -86,6 +86,12 @@ try {
     notes TEXT,
     created_at TEXT NOT NULL DEFAULT (datetime('now'))
   );
+
+  CREATE TABLE IF NOT EXISTS checklist_items (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    label TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+  );
 `);
 } catch {
   // Column already exists — nothing to do.
@@ -155,5 +161,11 @@ export interface Vitals {
   heart_rate: number | null;
   weight: number | null;
   notes: string | null;
+  created_at: string;
+}
+
+export interface ChecklistItem {
+  id: number;
+  label: string;
   created_at: string;
 }
