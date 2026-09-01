@@ -1,3 +1,7 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+
 interface RecoveryDialProps {
   score: number; // 0-100
   label: string;
@@ -5,11 +9,35 @@ interface RecoveryDialProps {
 }
 
 export default function RecoveryDial({ score, label, size = 92 }: RecoveryDialProps) {
+  const target = Math.max(0, Math.min(100, score));
+  const [displayScore, setDisplayScore] = useState(0);
+  const rafRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    const duration = 900; // ms
+    const start = performance.now();
+
+    function tick(now: number) {
+      const elapsed = now - start;
+      const progress = Math.min(1, elapsed / duration);
+      // ease-out cubic — starts fast, settles gently, feels natural
+      // for a dial "arriving" at its value rather than just appearing.
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setDisplayScore(Math.round(eased * target));
+      if (progress < 1) {
+        rafRef.current = requestAnimationFrame(tick);
+      }
+    }
+    rafRef.current = requestAnimationFrame(tick);
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, [target]);
+
   const stroke = 8;
   const radius = (size - stroke) / 2;
   const circumference = 2 * Math.PI * radius;
-  const clamped = Math.max(0, Math.min(100, score));
-  const offset = circumference - (clamped / 100) * circumference;
+  const offset = circumference - (displayScore / 100) * circumference;
   const gradientId = "recovery-dial-gradient";
 
   return (
@@ -51,7 +79,7 @@ export default function RecoveryDial({ score, label, size = 92 }: RecoveryDialPr
           fontWeight={700}
           fontFamily="Work Sans, sans-serif"
         >
-          {clamped}
+          {displayScore}
         </text>
       </svg>
       <div className="text-xs text-ink/70 text-center mt-1 max-w-[110px] leading-snug">
